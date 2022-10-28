@@ -1,7 +1,7 @@
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:flutter/material.dart';
 
-import 'add_new/admin_add_view.dart';
+import 'add_new/add_admin_view.dart';
 import 'admin_hitlist_view.dart';
 import 'admin_manage_view.dart';
 import 'admin_schedule_view.dart';
@@ -35,11 +35,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
         currentIndex: pageIndex,
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.arrow_drop_up), label: "Schedule"),
+              icon: Icon(Icons.arrow_circle_up_rounded), label: "Schedule"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.arrow_drop_up), label: "Hitlist"),
+              icon: Icon(Icons.arrow_circle_up_rounded), label: "Hitlist"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.arrow_drop_up), label: "Manage"),
+              icon: Icon(Icons.arrow_circle_up_rounded), label: "Manage"),
         ],
       ),
       floatingActionButton: FloatingActionButton(

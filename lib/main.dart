@@ -1,7 +1,12 @@
 import 'package:first_platoon/views/splash_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const FirtsPlatoon());
 }
 
@@ -10,10 +15,11 @@ class FirtsPlatoon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.grey.shade200,
+        fontFamily: "montserrat",
+        scaffoldBackgroundColor: Color(0xFFFCFBF4),
         appBarTheme: const AppBarTheme(elevation: 0),
         inputDecorationTheme: const InputDecorationTheme(
             border: OutlineInputBorder(),

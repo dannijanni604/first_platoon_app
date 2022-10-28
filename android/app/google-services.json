@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "702842399723",
+    "project_id": "first-platoon",
+    "storage_bucket": "first-platoon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702842399723:android:8fcd4990b11393e39f87ae",
+        "android_client_info": {
+          "package_name": "com.example.first_platoon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702842399723-t6stp73akusnme7j9pj5k16dfc01eima.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbYnNG6FEgheac2GReKOXGaNHsA1VuNRQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702842399723-t6stp73akusnme7j9pj5k16dfc01eima.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,5 @@
-import 'package:first_platoon/views/user_views/user_hitlist_view.dart';
-import 'package:first_platoon/views/user_views/user_schedule_view.dart';
+import 'package:first_platoon/views/user_view/user_hitlist_view.dart';
+import 'package:first_platoon/views/user_view/user_schedule_view.dart';
 import 'package:flutter/material.dart';
 
 class UserHomeView extends StatefulWidget {
@@ -30,9 +30,9 @@ class _UserHomeViewState extends State<UserHomeView> {
         currentIndex: pageIndex,
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.arrow_drop_up), label: "Schedule"),
+              icon: Icon(Icons.arrow_circle_up_rounded), label: "Schedule"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.arrow_drop_up), label: "Hitlist"),
+              icon: Icon(Icons.arrow_circle_up_rounded), label: "Hitlist"),
         ],
       ),
     );
