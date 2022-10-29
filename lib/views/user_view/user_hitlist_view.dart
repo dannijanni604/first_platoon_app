@@ -1,5 +1,7 @@
 import 'package:first_platoon/controllers/hitlist_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
+import 'package:first_platoon/core/components/snackbar.dart';
+import 'package:first_platoon/core/const.dart';
 import 'package:first_platoon/views/user_view/submit_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -47,7 +49,7 @@ class UserHitlistView extends StatelessWidget {
                           children: [
                             Text(
                               "Example Duty",
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Const.labelText(),
                             ),
                           ],
                         ),
@@ -65,6 +67,7 @@ class UserHitlistView extends StatelessWidget {
                       ? GestureDetector(
                           onTap: () {
                             ctrl.isComplete.value = !ctrl.isComplete.value;
+                            ksucessSnackbar(message: "Completed Successfully");
                           },
                           child: Container(
                               height: size.height * 0.05,

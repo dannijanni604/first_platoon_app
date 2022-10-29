@@ -1,3 +1,4 @@
+import 'package:first_platoon/core/const.dart';
 import 'package:flutter/material.dart';
 
 class UserScheduleView extends StatelessWidget {
@@ -35,7 +36,7 @@ class UserScheduleView extends StatelessWidget {
                       children: [
                         Text(
                           "Example Duty",
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Const.labelText(),
                         ),
                       ],
                     ),

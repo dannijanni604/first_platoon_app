@@ -1,3 +1,4 @@
+import 'package:first_platoon/controllers/auth_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/const.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ class AuthOptionsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ctrl = Get.put(AuthController());
     return Scaffold(
       body: Center(
         child: Column(
@@ -18,7 +20,8 @@ class AuthOptionsView extends StatelessWidget {
             SizedBox(
               width: Get.size.width / 1.05,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  await ctrl.login();
                   appNavReplace(context, const AdminHomeView());
                 },
                 style: ElevatedButton.styleFrom(
@@ -30,7 +33,7 @@ class AuthOptionsView extends StatelessWidget {
                 ),
                 child: Text(
                   "Login As Admin",
-                  style: Const.label(color: Colors.white),
+                  style: Const.labelText(color: Colors.white),
                 ),
               ),
             ),
@@ -52,7 +55,7 @@ class AuthOptionsView extends StatelessWidget {
                 ),
                 child: Text(
                   "Login As User",
-                  style: Const.label(color: Colors.white),
+                  style: Const.labelText(color: Colors.white),
                 ),
               ),
             ),

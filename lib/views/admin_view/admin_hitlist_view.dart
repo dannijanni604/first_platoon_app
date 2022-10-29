@@ -43,7 +43,7 @@ class AdminHitlistView extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Text("HitList Duty", style: Const.label()),
+                            Text("HitList Duty", style: Const.labelText()),
                           ],
                         ),
                       ],

@@ -22,7 +22,7 @@ class HitlistController extends GetxController {
         log("User canceled the picker");
       }
     } catch (e) {
-      log("Async Rrror");
+      log("Async Rrror : $e");
     }
   }
 

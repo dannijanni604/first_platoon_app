@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_platoon/core/app_navigator.dart';
+import 'package:first_platoon/views/admin_view/admin_home_view.dart';
 import 'package:flutter/material.dart';
 
 import 'admin_view/auth_views/auth_options_view.dart';
@@ -14,7 +16,12 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     Future.delayed(
-        Duration(seconds: 3), () => appNavReplace(context, AuthOptionsView()));
+        Duration(seconds: 3),
+        () => appNavReplace(
+            context,
+            FirebaseAuth.instance.currentUser!.uid != null
+                ? AdminHomeView()
+                : AuthOptionsView()));
     super.initState();
   }
 

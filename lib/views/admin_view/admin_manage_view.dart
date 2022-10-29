@@ -1,4 +1,5 @@
 import 'package:first_platoon/controllers/manage_controller.dart';
+import 'package:first_platoon/core/components/app_button.dart';
 import 'package:first_platoon/core/const.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,7 +29,7 @@ class AdminManageView extends StatelessWidget {
                       color:
                           ctrl.isClicked.value ? Colors.black12 : Colors.white,
                       border: Border.all(color: Colors.black45)),
-                  child: Text("Jake Completed Task", style: Const.label()),
+                  child: Text("Jake Completed Task", style: Const.labelText()),
                 );
               }),
             ),
@@ -51,24 +52,16 @@ class AdminManageView extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: const [
-                                  Material(
-                                    shape: RoundedRectangleBorder(
-                                        side:
-                                            BorderSide(color: Colors.black26)),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text("Approve"),
-                                    ),
+                                children: [
+                                  kAppButton(
+                                    onPressed: () {},
+                                    padding: EdgeInsets.all(8.0),
+                                    label: "Approve",
                                   ),
-                                  Material(
-                                    shape: RoundedRectangleBorder(
-                                        side:
-                                            BorderSide(color: Colors.black26)),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text("DisApprove"),
-                                    ),
+                                  kAppButton(
+                                    onPressed: () {},
+                                    padding: EdgeInsets.all(8.0),
+                                    label: "DisApprove",
                                   ),
                                 ],
                               )),
@@ -85,15 +78,12 @@ class AdminManageView extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Jake Submitted Doucoment",
-                                    maxLines: 2, style: Const.label()),
-                                const Material(
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide(color: Colors.black26)),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 15),
-                                    child: Text("View"),
-                                  ),
+                                    maxLines: 2, style: Const.labelText()),
+                                kAppButton(
+                                  onPressed: () {},
+                                  label: "View",
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 6, horizontal: 15),
                                 ),
                               ],
                             ),

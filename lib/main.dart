@@ -19,6 +19,10 @@ class FirtsPlatoon extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: "montserrat",
+        // accentIconTheme: IconThemeData(size: 30),
+
+        iconTheme: IconThemeData(size: 30),
+
         scaffoldBackgroundColor: Color(0xFFFCFBF4),
         appBarTheme: const AppBarTheme(elevation: 0),
         inputDecorationTheme: const InputDecorationTheme(
