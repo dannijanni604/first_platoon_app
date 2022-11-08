@@ -12,15 +12,48 @@ class Const {
   }
 
   static String? validateCode(String value) {
-    RegExp regex = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
+    RegExp regex =
+        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
     if (value.isEmpty) {
       return 'Please enter code';
     } else {
       if (!regex.hasMatch(value)) {
-        return 'code must contain 1 capital alphabet, numbers and 8 length';
+        return 'Code must contain 1 spacial, capital latter, numbers and 8 length';
       } else {
         return null;
       }
     }
   }
+
+  static String? validateEmail(String value) {
+    RegExp regex =
+        RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+            r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+            r"{0,253}[a-zA-Z0-9])?)*$");
+    if (value.isEmpty) {
+      return "Please enter email";
+    }
+    if (!regex.hasMatch(value)) {
+      return 'Enter a valid email address';
+    } else {
+      return null;
+    }
+  }
+
+  static List<Color> colors = [
+    Colors.indigo,
+    Colors.lightBlue,
+    Colors.pinkAccent.shade400,
+    Colors.lightGreen,
+    Colors.amber.shade400,
+    Colors.purple.shade400,
+    Colors.blueAccent.shade400,
+    Colors.black45,
+    Colors.cyanAccent,
+    Colors.orange.shade400,
+    Colors.red.shade400,
+    Colors.lightBlue,
+    Colors.lime,
+    Colors.lightBlueAccent,
+  ];
 }

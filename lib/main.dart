@@ -1,9 +1,14 @@
+import 'package:first_platoon/core/theme.dart';
 import 'package:first_platoon/views/splash_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_file_view/flutter_file_view.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() async {
+  await GetStorage.init();
+  FlutterFileView.init();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -15,6 +20,7 @@ class FirtsPlatoon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final Color green = Colors.deepOrange;
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -24,7 +30,10 @@ class FirtsPlatoon extends StatelessWidget {
         iconTheme: IconThemeData(size: 30),
 
         scaffoldBackgroundColor: Color(0xFFFCFBF4),
-        appBarTheme: const AppBarTheme(elevation: 0),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppTheme.kprimaryColor,
+          elevation: 0,
+        ),
         inputDecorationTheme: const InputDecorationTheme(
             border: OutlineInputBorder(),
             fillColor: Colors.white,

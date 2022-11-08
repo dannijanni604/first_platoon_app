@@ -39,9 +39,7 @@ class AddTasksView extends StatelessWidget {
                 height: size.height * 0.03,
               ),
               const Text("Due Date"),
-              SizedBox(
-                height: size.height * 0.01,
-              ),
+              SizedBox(height: size.height * 0.01),
               TextFormField(
                 controller: ctrl.taskdueDateController,
                 onTap: () async {
@@ -66,25 +64,78 @@ class AddTasksView extends StatelessWidget {
                   }
                 },
               ),
-              SizedBox(
-                height: size.height * 0.03,
-              ),
+              SizedBox(height: size.height * 0.03),
               const Text("Add Members"),
               SizedBox(
                 height: size.height * 0.01,
               ),
+              Obx(() {
+                return Wrap(
+                  spacing: 2,
+                  runSpacing: -3,
+                  children: [
+                    ...ctrl.taskMembers
+                        .map(
+                          (e) => Chip(
+                            onDeleted: () {
+                              ctrl.taskMembers.remove(e);
+                              // ctrl.taskMembers.value =
+                              //     ctrl.taskMembers.toSet().toList();
+                            },
+                            label: Text('${e['name']}${e['id']}'),
+                          ),
+                        )
+                        .toList(),
+                  ],
+                );
+              }),
+              SizedBox(
+                height: size.height * 0.01,
+              ),
               TextFormField(
+                decoration: const InputDecoration(
+                  hintText: "search members here",
+                ),
                 controller: ctrl.taskMemberController,
-                validator: (val) {
-                  if (val == null || val.isEmpty) {
-                    return "Add at least 1 member";
-                  } else {
-                    return null;
-                  }
+                onChanged: (v) {
+                  ctrl.searchMember(v.toLowerCase());
                 },
               ),
-              SizedBox(
-                height: size.height * 0.22,
+              Container(
+                height: 200,
+                child: ctrl.obx(
+                  (state) {
+                    if (ctrl.members.isNotEmpty) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: ctrl.members.length,
+                        itemBuilder: (context, index) {
+                          return Align(
+                            alignment: Alignment.topLeft,
+                            child: Chip(
+                              onDeleted: () {
+                                ctrl.taskMembers.add(ctrl.members[index]);
+                              },
+                              deleteIcon: Icon(Icons.add, size: 20),
+                              padding: EdgeInsets.all(1),
+                              label: Text(
+                                '${ctrl.members[index]['name']}${ctrl.members[index]['id']}',
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                    return const Center(
+                      child: Text("No User"),
+                    );
+                  },
+                  onEmpty: const Center(
+                    child: Text("Search by typing"),
+                  ),
+                  onLoading: Center(child: Text("")),
+                ),
               ),
               Center(
                 child: Column(
@@ -96,9 +147,7 @@ class AddTasksView extends StatelessWidget {
                       label: "Generate Task",
                       padding: EdgeInsets.all(10),
                     ),
-                    SizedBox(
-                      height: size.height * 0.04,
-                    ),
+                    SizedBox(height: size.height * 0.04),
                     IconButton(
                         onPressed: () {
                           Navigator.pop(context);

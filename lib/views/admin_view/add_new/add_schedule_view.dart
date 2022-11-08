@@ -1,6 +1,7 @@
+import 'dart:developer';
 import 'package:first_platoon/controllers/add_compaigns_controller.dart';
-import 'package:first_platoon/controllers/schedule_controller.dart';
 import 'package:first_platoon/core/components/app_button.dart';
+import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,12 +12,14 @@ class AddScheduleView extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = Get.size;
     final ctrl = Get.put(AddCompaignsConteroller());
-    final sctrl = Get.put(ScheduleController());
+
+    final _key = GlobalKey<FormState>();
+    // final sctrl = Get.put(ScheduleController());
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Form(
-          key: ctrl.scheduleformkey,
+          key: _key,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -40,95 +43,139 @@ class AddScheduleView extends StatelessWidget {
                 height: size.height * 0.01,
               ),
               TextFormField(
-                controller: ctrl.scheduledateController,
+                controller: ctrl.scheduleMemberController,
                 onTap: () async {
-                  DateTime? dateTime = await showDatePicker(
+                  ctrl.scheduledDateTime = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2201));
 
-                  ctrl.scheduledateController.text =
-                      dateTime.toString().substring(0, 11);
+                  // ctrl.scheduledateController.text =
                 },
                 decoration: const InputDecoration(
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
                 readOnly: true,
-                validator: (val) {
-                  if (val == null || val.isEmpty) {
-                    return "Enter Date";
-                  } else {
-                    return null;
-                  }
-                },
+                // validator: (val) {
+                //   if (val == null || val.isEmpty) {
+                //     return "Enter Date";
+                //   } else {
+                //     return null;
+                //   }
+                // },
               ),
               SizedBox(
                 height: size.height * 0.03,
               ),
               const Text("Add Members"),
+              Obx(() {
+                return Wrap(
+                  spacing: 2,
+                  runSpacing: -3,
+                  children: [
+                    ...ctrl.scheduleMembers
+                        .map(
+                          (e) => Chip(
+                            onDeleted: () {
+                              ctrl.scheduleMembers.remove(e);
+                              // ctrl.scheduleMembers.value =
+                              //     ctrl.scheduleMembers.toSet().toList();
+                            },
+                            label: Text('${e['name']} ' '${e['id']}'),
+                          ),
+                        )
+                        .toList(),
+                  ],
+                );
+              }),
               SizedBox(
                 height: size.height * 0.01,
               ),
               TextFormField(
+                decoration: const InputDecoration(
+                  hintText: "search members here",
+                ),
                 controller: ctrl.scheduleMemberController,
-                validator: (val) {
-                  if (val == null || val.isEmpty) {
-                    return "Add at least 1 Member";
-                  } else {
-                    return null;
-                  }
-                },
                 onChanged: (v) {
-                  sctrl.findMember(v);
+                  ctrl.searchMember(v.toLowerCase());
                 },
               ),
-              Obx(() {
-                return Container(
-                  height: 200,
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: sctrl.members.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          child: Text(
-                            sctrl.members[index],
-                          ),
-                        );
-                      }),
-                );
-              }),
-              Center(
-                child: Column(
-                  children: [
-                    kAppButton(
-                      onPressed: () {
-                        ctrl.addSchedule();
-                      },
-                      label: "Generate Schedule",
-                      padding: EdgeInsets.all(10),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.04,
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
+              Container(
+                height: 200,
+                // margin: EdgeInsets.symmetric(vertical: 10),
+                // padding: EdgeInsets.all(10),
+                child: ctrl.obx(
+                  (state) {
+                    if (ctrl.members.isNotEmpty) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: ctrl.members.length,
+                        itemBuilder: (context, index) {
+                          return Align(
+                            alignment: Alignment.topLeft,
+                            child: Chip(
+                              onDeleted: () {
+                                ctrl.scheduleMembers.add(ctrl.members[index]);
+                                log(ctrl.scheduleMembers.toString());
+                              },
+                              deleteIcon: Icon(Icons.add, size: 20),
+                              padding: EdgeInsets.all(1),
+                              label: Text(
+                                '${ctrl.members[index]['name']} '
+                                '${ctrl.members[index]['id']} ',
+                              ),
+                            ),
+                          );
                         },
-                        icon: const Icon(
-                          Icons.cancel,
-                        ))
-                  ],
+                      );
+                    }
+                    return const Center(
+                      child: Text("No User"),
+                    );
+                  },
+                  onEmpty: const Center(
+                    child: Text("Search by typing"),
+                  ),
+                  onLoading: Center(child: CircularProgressIndicator()),
                 ),
               ),
+              Obx(() {
+                return Center(
+                  child: ctrl.indicator.value
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Column(
+                          children: [
+                            kAppButton(
+                              onPressed: () {
+                                if (_key.currentState!.validate()) {
+                                  if (ctrl.scheduleMembers.isNotEmpty) {
+                                    ctrl.addSchedule();
+                                  } else {
+                                    kerrorSnackbar(message: "Add Members List");
+                                  }
+                                }
+                              },
+                              label: "Generate Schedule",
+                              padding: EdgeInsets.all(10),
+                            ),
+                            SizedBox(
+                              height: size.height * 0.04,
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(
+                                  Icons.cancel,
+                                ))
+                          ],
+                        ),
+                );
+              }),
             ],
           ),
         ),

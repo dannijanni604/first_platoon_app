@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:first_platoon/core/app_navigator.dart';
+import 'package:first_platoon/core/theme.dart';
 import 'package:first_platoon/views/admin_view/admin_home_view.dart';
+import 'package:first_platoon/views/user_view/user_home_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-import 'admin_view/auth_views/auth_options_view.dart';
+import 'auth_views/auth_options_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -15,25 +18,40 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    Future.delayed(
-        Duration(seconds: 3),
-        () => appNavReplace(
-            context,
-            FirebaseAuth.instance.currentUser!.uid != null
-                ? AdminHomeView()
-                : AuthOptionsView()));
+    Future.delayed(const Duration(seconds: 2), () {
+      final user = GetStorage().read('code');
+      if (user != null) {
+        Get.off(() => const UserHomeView());
+      } else if (FirebaseAuth.instance.currentUser != null) {
+        return Get.off(() => const AdminHomeView());
+      } else {
+        Get.off(() => const AuthOptionsView());
+      }
+    });
+    // Future.delayed(
+    //     Duration(seconds: 3), () => appNavReplace(context, AuthOptionsView()));
     super.initState();
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Center(
-          child: Text(
-            "F I R S T \n P L A T O O N",
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline5,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "F I R S T \n P L A T O O N",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline5!.copyWith(
+                    color: AppTheme.kprimaryColor,
+                  ),
+            ),
+            SizedBox(height: Get.size.height * 0.05),
+            Image.asset(
+              "assets/images/platoon.png",
+              scale: 3,
+            ),
+          ],
         ),
       ),
     );

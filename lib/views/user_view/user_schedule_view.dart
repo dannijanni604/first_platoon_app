@@ -1,50 +1,92 @@
+import 'dart:developer';
+import 'package:first_platoon/controllers/schedule_controller.dart';
+import 'package:first_platoon/core/app_navigator.dart';
+import 'package:first_platoon/core/components/app_tile.dart';
 import 'package:first_platoon/core/const.dart';
+import 'package:first_platoon/core/db.dart';
+import 'package:first_platoon/core/functions.dart';
+import 'package:first_platoon/core/theme.dart';
+import 'package:first_platoon/views/auth_views/auth_options_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class UserScheduleView extends StatelessWidget {
   const UserScheduleView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    final ctrl = Get.put(ScheduleController());
+    final id = GetStorage().read("id");
+    log(id);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppTheme.kblueColor,
+        automaticallyImplyLeading: false,
         title: const Text("Schedule"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                GetStorage().erase();
+                appNavReplace(context, const AuthOptionsView());
+              },
+              icon: const Icon(Icons.logout_outlined))
+        ],
       ),
-      body: ListView(
-        children: [
-          for (int i = 0; i < 5; i++)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: size.height * 0.1,
-                width: size.width * 0.97,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [
-                        Text("Nov  25-29"),
-                      ],
-                    ),
-                    Row(
+      body: StreamBuilder(
+        stream: DB.schedules.where('members.id', arrayContains: id).snapshots(),
+        builder: ((context, snapshot) {
+          if (snapshot.hasData) {
+            // return Text(snapshot.data!.docs.length.toString());
+            return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  List<dynamic> members =
+                      snapshot.data!.docs[index].data()['members'];
+
+                  return appTile(
+                    onpress: () {
+                      showMembersBottomSheet(
+                          context: context,
+                          members: members,
+                          task: snapshot.data!.docs[index].data()['task']);
+                    },
+                    child: Column(
                       children: [
-                        Text(
-                          "Example Duty",
-                          style: Const.labelText(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(snapshot.data!.docs[index]
+                                .data()['date']
+                                .toDate()
+                                .toString()),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                                snapshot.data!.docs[index]
+                                    .data()['task']
+                                    .toString(),
+                                style: Const.labelText()),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  );
+                });
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                snapshot.error.toString(),
               ),
-            ),
-        ],
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }),
       ),
     );
   }

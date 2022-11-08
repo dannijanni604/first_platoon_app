@@ -44,7 +44,7 @@ class AddMemberView extends StatelessWidget {
               Obx(() {
                 return Center(
                   child: ctrl.indicator.value
-                      ? Center(
+                      ? const Center(
                           child: CircularProgressIndicator(),
                         )
                       : Column(

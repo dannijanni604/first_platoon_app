@@ -1,3 +1,5 @@
+import 'package:first_platoon/core/const.dart';
+import 'package:first_platoon/core/functions.dart';
 import 'package:first_platoon/views/user_view/user_hitlist_view.dart';
 import 'package:first_platoon/views/user_view/user_schedule_view.dart';
 import 'package:flutter/material.dart';
@@ -13,27 +15,30 @@ class _UserHomeViewState extends State<UserHomeView> {
   int pageIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: pageIndex,
-        children: const [
-          UserScheduleView(),
-          UserHitlistView(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (int newIndex) {
-          setState(() {
-            pageIndex = newIndex;
-          });
-        },
-        currentIndex: pageIndex,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.arrow_circle_up_rounded), label: "Schedule"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.arrow_circle_up_rounded), label: "Hitlist"),
-        ],
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        body: IndexedStack(
+          index: pageIndex,
+          children: [
+            UserScheduleView(),
+            const UserHitlistView(),
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (int newIndex) {
+            setState(() {
+              pageIndex = newIndex;
+            });
+          },
+          currentIndex: pageIndex,
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.arrow_circle_up_rounded), label: "Schedule"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.arrow_circle_up_rounded), label: "Hitlist"),
+          ],
+        ),
       ),
     );
   }

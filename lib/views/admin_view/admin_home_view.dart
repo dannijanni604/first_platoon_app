@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:first_platoon/controllers/schedule_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
+import 'package:first_platoon/core/functions.dart';
 import 'package:first_platoon/views/admin_view/add_new/add_admin_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,38 +21,40 @@ class _AdminHomeViewState extends State<AdminHomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: pageIndex,
-        children: const [
-          AdminScheduleView(),
-          AdminHitlistView(),
-          AdminManageView(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (int newIndex) {
-          setState(() {
-            pageIndex = newIndex;
-          });
-        },
-        currentIndex: pageIndex,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.arrow_circle_up_rounded), label: "Schedule"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.arrow_circle_up_rounded), label: "Hitlist"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.arrow_circle_up_rounded), label: "Manage"),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await ctrl.fetchMembers();
-          appNavPush(context, const AdminAddNew());
-        },
-        child: const Icon(
-          Icons.add,
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        body: IndexedStack(
+          index: pageIndex,
+          children: const [
+            AdminScheduleView(),
+            AdminHitlistView(),
+            AdminManageView(),
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (int newIndex) {
+            setState(() {
+              pageIndex = newIndex;
+            });
+          },
+          currentIndex: pageIndex,
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.arrow_circle_up_rounded), label: "Schedule"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.arrow_circle_up_rounded), label: "Hitlist"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.arrow_circle_up_rounded), label: "Manage"),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            appNavPush(context, const AdminAddNew());
+          },
+          child: const Icon(
+            Icons.add,
+          ),
         ),
       ),
     );
