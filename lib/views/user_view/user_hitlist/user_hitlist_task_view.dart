@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_platoon/controllers/hitlist_controller.dart';
@@ -5,112 +6,23 @@ import 'package:first_platoon/core/components/app_button.dart';
 import 'package:first_platoon/core/components/app_tile.dart';
 import 'package:first_platoon/core/const.dart';
 import 'package:first_platoon/core/db.dart';
-import 'package:first_platoon/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-class UserHitlistView extends StatelessWidget {
-  const UserHitlistView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    int index = 0;
-    return DefaultTabController(
-      length: 2,
-      initialIndex: index,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppTheme.kblueColor,
-          automaticallyImplyLeading: false,
-          title: const TabBar(
-            tabs: [
-              Tab(
-                text: "Non Submitted Task",
-              ),
-              Tab(
-                text: "Submited Task",
-              ),
-            ],
-          ),
-        ),
-        body: const TabBarView(
-          children: [
-            NonSubmittedTaskView(),
-            SubmittedTaskView(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SubmittedTaskView extends StatelessWidget {
-  const SubmittedTaskView({super.key});
+class UserHitListTaskView extends StatelessWidget {
+  const UserHitListTaskView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(HitlistController());
+    final id = GetStorage().read('id');
+    log("Id ID $id");
 
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: DB.completedTask
-          .orderBy('submited_date', descending: true)
+      stream: DB.tasks
+          .where('members', arrayContains: id)
+          .where('status', isNull: true)
           .snapshots(),
-      builder: ((context, snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                List<dynamic> decoments =
-                    snapshot.data!.docs[index].data()['decoments'];
-                return appTile(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(snapshot.data!.docs[index].data()['task']),
-                          Text(snapshot.data!.docs[index]
-                              .data()['submited_date']
-                              .toDate()
-                              .toString()),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Status :", style: Const.labelText()),
-                          Text(
-                            '${snapshot.data!.docs[index].data()['status']}',
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              });
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      }),
-    );
-  }
-}
-
-class NonSubmittedTaskView extends StatelessWidget {
-  const NonSubmittedTaskView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final ctrl = Get.put(HitlistController());
-
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: DB.schedules.snapshots(),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
@@ -120,23 +32,28 @@ class NonSubmittedTaskView extends StatelessWidget {
                   onpress: () {
                     showUserHitlitBottomSheet(
                       context: context,
-                      task: snapshot.data!.docs[index].data()['task'],
+                      index: index,
+                      snapshot: snapshot,
                     );
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // IconButton(
+                      //   onPressed: () {
+                      //     DB.tasks.doc(snapshot.data!.docs[index].id).delete();
+                      //   },
+                      //   icon: Icon(Icons.delete),
+                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(snapshot.data!.docs[index]
-                              .data()['date']
-                              .toDate()
-                              .toString()),
+                          Text(snapshot.data!.docs[index].data()['due_date']),
                         ],
                       ),
                       Text(snapshot.data!.docs[index].data()['task'],
                           style: Const.labelText()),
+                      // Text(snapshot.data!.docs[index].data()['auth_id']),
                     ],
                   ),
                 );
@@ -156,7 +73,8 @@ class NonSubmittedTaskView extends StatelessWidget {
 
 showUserHitlitBottomSheet({
   BuildContext? context,
-  String? task,
+  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>? snapshot,
+  int? index,
 }) {
   final ctrl = Get.put(HitlistController());
 
@@ -172,7 +90,8 @@ showUserHitlitBottomSheet({
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                        child: Text("Add Decoments For ${task}",
+                        child: Text(
+                            "Add Decoments For ${snapshot!.data!.docs[index!].data()['task']}",
                             style: Const.labelText())),
                     IconButton(
                       onPressed: () {
@@ -244,11 +163,11 @@ showUserHitlitBottomSheet({
                     : kAppButton(
                         onPressed: () {
                           ctrl.onUserCompleteTask(
-                            task: task!,
+                            index: index,
+                            snapshot: snapshot,
                           );
                         },
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
                         label: "Submit Task"),
               ],
             ),

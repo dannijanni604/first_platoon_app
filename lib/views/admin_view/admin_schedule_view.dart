@@ -1,7 +1,8 @@
-import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_platoon/controllers/auth_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/db.dart';
+import 'package:first_platoon/models/metting_model.dart';
 import 'package:first_platoon/views/auth_views/auth_options_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,41 +22,38 @@ class AdminScheduleView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              // authCtrl.signOut(context);
-              Future.delayed(Duration(seconds: 1), () {
-                appNavReplace(context, AuthOptionsView());
-              });
+              authCtrl.signOut(context);
+              appNavReplace(context, const AuthOptionsView());
             },
             icon: const Icon(Icons.logout_outlined),
           )
         ],
       ),
       body: StreamBuilder(
-        stream: DB.schedules.snapshots(),
+        stream: DB.schedules
+            .where('auth_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             return SfCalendar(
               minDate: DateTime.now(),
               // viewHeaderHeight: -5,
               headerHeight: 40,
-              onTap: (CalendarTapDetails detail) {
-                log(detail.date.toString());
-              },
-              view: CalendarView.schedule,
+              onTap: (CalendarTapDetails detail) {},
+              view: CalendarView.month,
               cellBorderColor: Colors.transparent,
-              monthViewSettings: MonthViewSettings(
-                  appointmentDisplayCount: snapshot.data!.docs.length,
+              monthViewSettings: const MonthViewSettings(
+                  appointmentDisplayCount: 3,
                   agendaItemHeight: 50,
-                  monthCellStyle: const MonthCellStyle(),
-                  agendaStyle: const AgendaStyle(
+                  monthCellStyle: MonthCellStyle(),
+                  agendaStyle: AgendaStyle(
                     appointmentTextStyle: TextStyle(
                       color: Colors.black,
                     ),
                   ),
-                  // showTrailingAndLeadingDates: true,
                   appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
                   showAgenda: true),
-              dataSource: MeetingDataSource(_getDataSource(
+              dataSource: MeetingDataSource(getDataSource(
                 snapshot.data!.docs.map((e) => e.data()).toList(),
               )),
             );
@@ -74,58 +72,4 @@ class AdminScheduleView extends StatelessWidget {
       ),
     );
   }
-}
-
-List<Meeting> _getDataSource(List<Map<String, dynamic>> data) {
-  final List<Meeting> meetings = <Meeting>[];
-
-  for (var e in data) {
-    meetings.add(
-      Meeting(e['task'], DateTime.now(), e['date'].toDate(), Colors.redAccent,
-          true),
-    );
-  }
-
-  return meetings;
-}
-
-class MeetingDataSource extends CalendarDataSource {
-  MeetingDataSource(List<Meeting> source) {
-    appointments = source;
-  }
-
-  @override
-  DateTime getStartTime(int index) {
-    return appointments![index].from;
-  }
-
-  @override
-  DateTime getEndTime(int index) {
-    return appointments![index].to;
-  }
-
-  @override
-  String getSubject(int index) {
-    return appointments![index].eventName;
-  }
-
-  @override
-  Color getColor(int index) {
-    return appointments![index].background;
-  }
-
-  @override
-  bool isAllDay(int index) {
-    return appointments![index].isAllDay;
-  }
-}
-
-class Meeting {
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
-  String eventName;
-  DateTime from;
-  DateTime to;
-  Color background;
-  bool isAllDay;
 }

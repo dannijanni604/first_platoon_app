@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:first_platoon/core/const.dart';
+import 'package:first_platoon/core/db.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +17,8 @@ Future<bool> onWillPop() {
   return Future.value(true);
 }
 
-showMembersBottomSheet({BuildContext? context, List? members, String? task}) {
+showMembersBottomSheet(
+    {BuildContext? context, List<String>? members, String? task}) {
   showModalBottomSheet(
       shape: const OutlineInputBorder(
           borderRadius: BorderRadius.only(
@@ -39,7 +42,7 @@ showMembersBottomSheet({BuildContext? context, List? members, String? task}) {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(task ?? "", style: Const.labelText(color: Colors.white)),
+                  // Text(task ?? "", style: Const.labelText(color: Colors.white)),
                   IconButton(
                       onPressed: () {
                         Get.back();
@@ -56,12 +59,26 @@ showMembersBottomSheet({BuildContext? context, List? members, String? task}) {
                 child: Column(
                   children: [
                     ...members!.map(
-                      (e) => PopupMenuItem<String>(
-                          child: Container(
-                            width: Get.size.width,
-                            child: Text(e['name']),
-                          ),
-                          value: '1'),
+                      (e) =>
+                          FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                        future: DB.members.doc(e).get(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return PopupMenuItem<String>(
+                              child: Container(
+                                width: Get.size.width,
+                                child: Text(
+                                  snapshot.data!.data()!['name'],
+                                ),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text(snapshot.error.toString()));
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      ),
                     )
                   ],
                 ),

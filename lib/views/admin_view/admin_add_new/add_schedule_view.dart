@@ -43,7 +43,7 @@ class AddScheduleView extends StatelessWidget {
                 height: size.height * 0.01,
               ),
               TextFormField(
-                controller: ctrl.scheduleMemberController,
+                controller: ctrl.scheduledateController,
                 onTap: () async {
                   ctrl.scheduledDateTime = await showDatePicker(
                       context: context,
@@ -51,19 +51,20 @@ class AddScheduleView extends StatelessWidget {
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2201));
 
-                  // ctrl.scheduledateController.text =
+                  ctrl.scheduledateController.text =
+                      ctrl.scheduledDateTime.toString().substring(0, 10);
                 },
                 decoration: const InputDecoration(
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
                 readOnly: true,
-                // validator: (val) {
-                //   if (val == null || val.isEmpty) {
-                //     return "Enter Date";
-                //   } else {
-                //     return null;
-                //   }
-                // },
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return "Enter Date";
+                  } else {
+                    return null;
+                  }
+                },
               ),
               SizedBox(
                 height: size.height * 0.03,
@@ -82,7 +83,7 @@ class AddScheduleView extends StatelessWidget {
                               // ctrl.scheduleMembers.value =
                               //     ctrl.scheduleMembers.toSet().toList();
                             },
-                            label: Text('${e['name']} ' '${e['id']}'),
+                            label: Text(e['name']),
                           ),
                         )
                         .toList(),
@@ -123,8 +124,7 @@ class AddScheduleView extends StatelessWidget {
                               deleteIcon: Icon(Icons.add, size: 20),
                               padding: EdgeInsets.all(1),
                               label: Text(
-                                '${ctrl.members[index]['name']} '
-                                '${ctrl.members[index]['id']} ',
+                                ctrl.members[index]['name'],
                               ),
                             ),
                           );
@@ -144,9 +144,7 @@ class AddScheduleView extends StatelessWidget {
               Obx(() {
                 return Center(
                   child: ctrl.indicator.value
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
+                      ? const CircularProgressIndicator()
                       : Column(
                           children: [
                             kAppButton(
@@ -160,7 +158,7 @@ class AddScheduleView extends StatelessWidget {
                                 }
                               },
                               label: "Generate Schedule",
-                              padding: EdgeInsets.all(10),
+                              padding: EdgeInsets.symmetric(vertical: 15),
                             ),
                             SizedBox(
                               height: size.height * 0.04,

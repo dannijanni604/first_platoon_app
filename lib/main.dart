@@ -24,12 +24,13 @@ class FirtsPlatoon extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primarySwatch: AppTheme.primaryColor,
         fontFamily: "montserrat",
         // accentIconTheme: IconThemeData(size: 30),
 
         iconTheme: IconThemeData(size: 30),
 
-        scaffoldBackgroundColor: Color(0xFFFCFBF4),
+        // scaffoldBackgroundColor: Color(0xFFFCFBF4),
         appBarTheme: const AppBarTheme(
           backgroundColor: AppTheme.kprimaryColor,
           elevation: 0,

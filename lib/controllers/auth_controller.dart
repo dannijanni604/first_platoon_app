@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:first_platoon/core/db.dart';
-import 'package:first_platoon/views/admin_view/admin_home_view.dart';
-import 'package:first_platoon/views/user_view/user_home_view.dart';
+import 'package:first_platoon/views/admin_view/admin_home_tabs.dart';
+import 'package:first_platoon/views/user_view/user_tabs_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,12 +19,16 @@ class AuthController extends GetxController {
   RxBool onLogin = false.obs;
   // user
   final userCodecontroller = TextEditingController();
-
   // admin
-
   final adminNameController = TextEditingController();
   final adminEmailController = TextEditingController();
   final adminPasswordController = TextEditingController();
+
+  // user var
+
+  String? currentUserId = '';
+  String? currentUserCode = '';
+  String? currentUSerName = '';
 
   GetStorage storage = GetStorage();
 
@@ -48,8 +53,6 @@ class AuthController extends GetxController {
   }
 
   Future signOut(BuildContext context) async {
-    Stream<User?> user = FirebaseAuth.instance.authStateChanges();
-
     await auth.signOut();
   }
 
@@ -63,7 +66,7 @@ class AuthController extends GetxController {
       )
           .then((UserCredential credential) {
         final uid = credential.user!.uid;
-        FirebaseFirestore.instance.collection('admins').doc(uid).set({
+        DB.admins.doc(uid).set({
           "name": adminNameController.text,
           "email": adminEmailController.text,
           "uid": uid,
@@ -79,22 +82,49 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<void> resetPassword(String email) async {
+    try {
+      onLogin(true);
+      await auth.sendPasswordResetEmail(email: email);
+      kerrorSnackbar(
+        message: "Request Will Be Send Check You MailBox To Reset Password",
+      );
+      onLogin(false);
+    } on FirebaseAuthException catch (e) {
+      onLogin(true);
+      return kerrorSnackbar(message: e.toString());
+    }
+  }
+
   Future loginAsUser(BuildContext context) async {
     try {
+      onLogin(true);
       bool isUserExist = await DB.members
           .where('code', isEqualTo: userCodecontroller.text)
           .get()
-          .then<bool>((value) {
+          .then<bool>((value) async {
         for (var e in value.docs) {
-          String id = e.data()['id'];
-          String code = e.data()['code'];
-          String name = e.data()['name'];
-          storage.write("id", id);
-          storage.write("code", code);
-          storage.write("code", name);
+          currentUSerName = e.data()['name'];
+          currentUserCode = e.data()['code'];
+          currentUserId = e.id;
+          storage.write("id", currentUserId);
+          storage.write("code", currentUserCode);
+          storage.write("name", currentUSerName);
         }
+        try {
+          await auth.signInAnonymously();
+          log("User Sign In Anonymously");
+          userCodecontroller.clear();
+        } on FirebaseAuthException catch (e) {
+          switch (e.code) {
+            case "operation-not-allowed":
+              break;
+            default:
+              kerrorSnackbar(message: e.toString());
+          }
+        }
+
         if (value.docs.isNotEmpty) {
-          // value.docs.map((e) {});
           return true;
         } else {
           return false;
@@ -102,11 +132,14 @@ class AuthController extends GetxController {
       });
 
       if (isUserExist) {
+        onLogin(false);
         return appNavReplace(context, UserHomeView());
       } else {
-        return kerrorSnackbar(message: "User Not find Enter Another Code");
+        onLogin(false);
+        return kerrorSnackbar(message: "User Did't Match Try Another Code");
       }
     } on Exception catch (e) {
+      onLogin(false);
       return kerrorSnackbar(message: e.toString());
     }
   }

@@ -44,9 +44,7 @@ class AddMemberView extends StatelessWidget {
               Obx(() {
                 return Center(
                   child: ctrl.indicator.value
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
+                      ? const CircularProgressIndicator()
                       : Column(
                           children: [
                             kAppButton(
@@ -54,7 +52,7 @@ class AddMemberView extends StatelessWidget {
                                 ctrl.addMember();
                               },
                               label: "Generate User",
-                              padding: EdgeInsets.all(10),
+                              padding: EdgeInsets.symmetric(vertical: 15),
                             ),
                             SizedBox(
                               height: size.height * 0.04,

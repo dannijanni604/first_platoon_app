@@ -1,6 +1,5 @@
-import 'package:first_platoon/core/const.dart';
 import 'package:first_platoon/core/functions.dart';
-import 'package:first_platoon/views/user_view/user_hitlist_view.dart';
+import 'package:first_platoon/views/user_view/user_hitlist/user_hitlist_tabs.dart';
 import 'package:first_platoon/views/user_view/user_schedule_view.dart';
 import 'package:flutter/material.dart';
 
@@ -20,9 +19,9 @@ class _UserHomeViewState extends State<UserHomeView> {
       child: Scaffold(
         body: IndexedStack(
           index: pageIndex,
-          children: [
+          children: const [
             UserScheduleView(),
-            const UserHitlistView(),
+            UserHitlistView(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

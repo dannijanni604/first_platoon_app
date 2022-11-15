@@ -2,12 +2,14 @@ import 'package:first_platoon/controllers/auth_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/components/app_button.dart';
 import 'package:first_platoon/core/const.dart';
-import 'package:first_platoon/views/admin_view/admin_login_view.dart';
+import 'package:first_platoon/views/auth_views/admin_forget_password_view.dart';
+import 'package:first_platoon/views/auth_views/admin_signup_view.dart';
+import 'package:first_platoon/views/auth_views/auth_options_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AdminSignUpView extends StatelessWidget {
-  const AdminSignUpView({super.key});
+class AdminLoginView extends StatelessWidget {
+  const AdminLoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,38 +24,25 @@ class AdminSignUpView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // IconButton(
-                //   onPressed: () {
-                //     Get.back();
-                //   },
-                //   icon: const Icon(
-                //     Icons.arrow_back_ios_new,
-                //     size: 25,
-                //   ),
-                // ),
+                IconButton(
+                  onPressed: () {
+                    appNavReplace(context, AuthOptionsView());
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new,
+                    size: 25,
+                  ),
+                ),
                 SizedBox(height: Get.size.height * 0.03),
                 Text("Welcome To First Platoon", style: Const.labelText()),
                 SizedBox(height: Get.size.height * 0.03),
-                const Text("Sign Up With Email And Password"),
+                const Text("Login With Email And Password"),
                 SizedBox(height: Get.size.height * 0.03),
                 Form(
                   key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Enter Name"),
-                      SizedBox(height: Get.size.height * 0.01),
-                      TextFormField(
-                        controller: ctrl.adminNameController,
-                        validator: (val) {
-                          if (val!.isEmpty || val == null) {
-                            return "Please Enter Name";
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                      SizedBox(height: Get.size.height * 0.03),
                       Text("Enter Email"),
                       SizedBox(height: Get.size.height * 0.01),
                       TextFormField(
@@ -68,21 +57,42 @@ class AdminSignUpView extends StatelessWidget {
                       TextFormField(
                         controller: ctrl.adminPasswordController,
                         validator: (val) {
-                          return Const.validateCode(val!);
+                          if (val == null || val.isEmpty) {
+                            return "Enter Code To Login";
+                          } else {
+                            return null;
+                          }
                         },
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
                             onTap: () {
-                              appNavPush(context, const AdminLoginView());
+                              appNavPush(
+                                  context, const AdminForgetPasswordView());
                             },
                             child: const Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: 20, horizontal: 20),
                               child: Text(
-                                "Go Back",
+                                "Forget Password",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              appNavPush(context, const AdminSignUpView());
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 20),
+                              child: Text(
+                                "Register",
                                 style: TextStyle(
                                   color: Colors.blue,
                                   decoration: TextDecoration.underline,
@@ -100,12 +110,12 @@ class AdminSignUpView extends StatelessWidget {
                               : kAppButton(
                                   onPressed: () {
                                     if (formKey.currentState!.validate()) {
-                                      ctrl.signUp(context);
+                                      ctrl.login(context);
                                     }
                                   },
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 15, horizontal: 50),
-                                  label: "Sign Up",
+                                  label: "Login",
                                 );
                         }),
                       ),

@@ -1,6 +1,6 @@
-import 'package:first_platoon/views/admin_view/add_new/add_member_view.dart';
-import 'package:first_platoon/views/admin_view/add_new/add_schedule_view.dart';
-import 'package:first_platoon/views/admin_view/add_new/add_tasks_view.dart';
+import 'package:first_platoon/views/admin_view/admin_add_new/add_member_view.dart';
+import 'package:first_platoon/views/admin_view/admin_add_new/add_schedule_view.dart';
+import 'package:first_platoon/views/admin_view/admin_add_new/add_tasks_view.dart';
 import 'package:flutter/material.dart';
 
 class AdminAddNew extends StatelessWidget {

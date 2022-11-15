@@ -5,18 +5,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:first_platoon/core/db.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class HitlistController extends GetxController {
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-  }
-
   RxBool isClicked = false.obs;
   RxBool isComplete = false.obs;
   RxString decumentPath = '_'.obs;
@@ -33,7 +27,6 @@ class HitlistController extends GetxController {
           await FilePicker.platform.pickFiles(allowMultiple: true);
       if (result != null) {
         pickedFile(result.files.map((e) {
-          // openFile(e);
           return File(e.path!);
         }).toList());
       } else {
@@ -60,29 +53,23 @@ class HitlistController extends GetxController {
     }
   }
 
-  // Future<File> changePath(PlatformFile file) async {
-  //   final directory = await getApplicationDocumentsDirectory();
-  //   final newFile = File('${directory.path}/${file.name}');
-  //   return File(file.path!).copy(newFile.path);
-  // }
-
   Future onUserCompleteTask({
-    String? task,
+    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>? snapshot,
+    int? index,
   }) async {
     isClicked(true);
-
+    final name = GetStorage().read('name');
     try {
       if (pickedFile.isNotEmpty) {
-        final name = GetStorage().read('name');
         await uplodDecoments();
-        await DB.completedTask.doc().set({
-          "decoments": FieldValue.arrayUnion(pickedFileUrls),
-          "submited_by": name,
-          "submited_date": DateTime.now(),
-          "task": task,
+        await DB.tasks.doc(snapshot!.data!.docs[index!].id).update({
+          "documents": FieldValue.arrayUnion(pickedFileUrls),
+          "submitted_by": name,
+          "submitted_at": FieldValue.serverTimestamp(),
           'status': "processing",
         });
         pickedFile.clear();
+        pickedFileUrls.clear();
         isClicked(false);
         Get.back();
         ksucessSnackbar(message: "Task Submited SuccesFully");
@@ -97,21 +84,4 @@ class HitlistController extends GetxController {
       isClicked(false);
     }
   }
-
-  hitListJobs() async {
-    QuerySnapshot<Map<String, dynamic>> docs = await DB.schedules
-        .where('members.member', isEqualTo: "sir azeem")
-        .get();
-    for (var e in docs.docs) {
-      log("message");
-      log(e.data().length.toString());
-      log(e.data()['date']);
-    }
-  }
-
-  // void openFile(PlatformFile? file) {
-  //   OpenFile.open(
-  //     file!.path,
-  //   );
-  // }
 }

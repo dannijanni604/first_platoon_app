@@ -2,13 +2,12 @@ import 'package:first_platoon/controllers/auth_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/components/app_button.dart';
 import 'package:first_platoon/core/const.dart';
-import 'package:first_platoon/views/admin_view/admin_signup_view.dart';
-import 'package:first_platoon/views/auth_views/auth_options_view.dart';
+import 'package:first_platoon/views/auth_views/admin_login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AdminLoginView extends StatelessWidget {
-  const AdminLoginView({super.key});
+class AdminSignUpView extends StatelessWidget {
+  const AdminSignUpView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,25 +22,38 @@ class AdminLoginView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                IconButton(
-                  onPressed: () {
-                    appNavReplace(context, AuthOptionsView());
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 25,
-                  ),
-                ),
+                // IconButton(
+                //   onPressed: () {
+                //     Get.back();
+                //   },
+                //   icon: const Icon(
+                //     Icons.arrow_back_ios_new,
+                //     size: 25,
+                //   ),
+                // ),
                 SizedBox(height: Get.size.height * 0.03),
                 Text("Welcome To First Platoon", style: Const.labelText()),
                 SizedBox(height: Get.size.height * 0.03),
-                const Text("Login With Email And Password"),
+                const Text("Sign Up With Email And Password"),
                 SizedBox(height: Get.size.height * 0.03),
                 Form(
                   key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text("Enter Name"),
+                      SizedBox(height: Get.size.height * 0.01),
+                      TextFormField(
+                        controller: ctrl.adminNameController,
+                        validator: (val) {
+                          if (val!.isEmpty || val == null) {
+                            return "Please Enter Name";
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                      SizedBox(height: Get.size.height * 0.03),
                       Text("Enter Email"),
                       SizedBox(height: Get.size.height * 0.01),
                       TextFormField(
@@ -56,11 +68,7 @@ class AdminLoginView extends StatelessWidget {
                       TextFormField(
                         controller: ctrl.adminPasswordController,
                         validator: (val) {
-                          if (val == null || val.isEmpty) {
-                            return "Enter Code To Login";
-                          } else {
-                            return null;
-                          }
+                          return Const.validateCode(val!);
                         },
                       ),
                       Row(
@@ -68,13 +76,13 @@ class AdminLoginView extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              appNavPush(context, const AdminSignUpView());
+                              appNavPush(context, const AdminLoginView());
                             },
                             child: const Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: 20, horizontal: 20),
                               child: Text(
-                                "Register",
+                                "Go Back",
                                 style: TextStyle(
                                   color: Colors.blue,
                                   decoration: TextDecoration.underline,
@@ -92,12 +100,12 @@ class AdminLoginView extends StatelessWidget {
                               : kAppButton(
                                   onPressed: () {
                                     if (formKey.currentState!.validate()) {
-                                      ctrl.login(context);
+                                      ctrl.signUp(context);
                                     }
                                   },
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 15, horizontal: 50),
-                                  label: "Login",
+                                  label: "Sign Up",
                                 );
                         }),
                       ),

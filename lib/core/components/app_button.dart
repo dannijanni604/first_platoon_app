@@ -1,3 +1,4 @@
+import 'package:first_platoon/core/theme.dart';
 import 'package:flutter/material.dart';
 
 Widget kAppButton({
@@ -12,8 +13,10 @@ Widget kAppButton({
     child: Container(
       padding: padding ?? EdgeInsets.symmetric(vertical: 12, horizontal: 25),
       decoration: BoxDecoration(
-        color: color ?? Colors.deepOrange.shade400,
-        border: Border.all(color: Colors.white),
+        color: color ?? Colors.white,
+        border: Border.all(
+          color: AppTheme.kprimaryColor,
+        ),
         borderRadius: BorderRadius.circular(50),
         boxShadow: const [
           BoxShadow(
@@ -23,7 +26,7 @@ Widget kAppButton({
               offset: Offset(0.6, -0.1)),
         ],
       ),
-      child: child ?? Text(label ?? "Label"),
+      child: Center(child: child ?? Text(label ?? "Label")),
     ),
   );
 }

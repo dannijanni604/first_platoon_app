@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:first_platoon/core/db.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,7 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
   RxList<Map<String, dynamic>> scheduleMembers =
       RxList<Map<String, dynamic>>([]);
   RxList<Map<String, dynamic>> taskMembers = RxList<Map<String, dynamic>>([]);
+  final authId = FirebaseAuth.instance.currentUser!.uid;
 
 // Schedule
   final scheduleTaskController = TextEditingController();
@@ -44,16 +46,19 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
     try {
       await DB.schedules.doc().set(
         {
+          'auth_id': FirebaseAuth.instance.currentUser!.uid,
           'task': scheduleTaskController.text,
           'date': scheduledDateTime,
-          'members': FieldValue.arrayUnion(scheduleMembers),
+          'members': FieldValue.arrayUnion(
+              scheduleMembers.map((e) => e['id']).toList()),
         },
       );
       ksucessSnackbar(message: "Schedule Added Successfuly");
       scheduleTaskController.clear();
-      // scheduledateController = DateTime.now();
       scheduleMemberController.clear();
       scheduleMembers.clear();
+      scheduledateController.clear();
+      members.clear();
     } on Exception catch (e) {
       kerrorSnackbar(message: e.toString());
       indicator(false);
@@ -69,15 +74,24 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
         try {
           await DB.tasks.doc().set(
             {
+              'doc_id': FirebaseAuth.instance.currentUser!.uid,
               'task': taskTaskController.text,
+              'submitted_by': "",
               'due_date': taskdueDateController.text,
-              'members': FieldValue.arrayUnion(taskMembers),
+              'created_at': FieldValue.serverTimestamp(),
+              'submitted_at': '',
+              'members': FieldValue.arrayUnion(
+                  taskMembers.map((e) => e['id']).toList()),
+              'documents': [],
+              'status': null,
             },
           );
           ksucessSnackbar(message: "Task Added Successfully");
           taskTaskController.clear();
           taskdueDateController.clear();
           taskMemberController.clear();
+          taskMembers.clear();
+          members.clear();
         } on Exception catch (e) {
           kerrorSnackbar(message: e.toString());
           indicator(false);
@@ -94,17 +108,18 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
     if (_memberformkey.currentState!.validate()) {
       indicator(true);
       try {
-        bool isUserExist = await DB.members
-            .where('member', isEqualTo: memberNameController.text.toLowerCase())
-            .get()
-            .then<bool>((value) {
-          if (value.docs.isNotEmpty) {
-            return true;
-          }
-          return false;
-        });
+        // bool isUserExist = await DB.members
+        //     .where('member', isEqualTo: memberNameController.text.toLowerCase())
+        //     .get()
+        //     .then<bool>((value) {
+        //   if (value.docs.isNotEmpty) {
+        //     return true;
+        //   }
+        //   return false;
+        // });
         bool isCodeExist = await DB.members
-            .where('member', isEqualTo: memberNameController.text.toLowerCase())
+            .where('code',
+                isEqualTo: genetrateCodeController.text.toLowerCase())
             .get()
             .then<bool>((value) {
           if (value.docs.isNotEmpty) {
@@ -112,8 +127,8 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
           }
           return false;
         });
-        if (isUserExist || isCodeExist) {
-          return kerrorSnackbar(message: "User Name Or Password Already Exist");
+        if (isCodeExist) {
+          return kerrorSnackbar(message: "Code is already exist try another");
         } else {
           DB.members.doc().set(
             {
@@ -121,7 +136,7 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
               'name_search_terms': getSearchTerms(memberNameController.text),
               'code': genetrateCodeController.text,
               'created_at': DateTime.now(),
-              'id': DB.members.doc().id,
+              // 'id': DB.members.id,
             },
           );
           memberNameController.clear();
@@ -154,7 +169,7 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
           for (var element in doc.docs) {
             members.add({
               'name': element.data()['name'],
-              'id': element.data()['id'],
+              'id': element.id,
             });
           }
         }

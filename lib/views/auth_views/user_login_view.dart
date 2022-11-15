@@ -2,6 +2,7 @@ import 'package:first_platoon/controllers/auth_controller.dart';
 import 'package:first_platoon/core/components/app_button.dart';
 import 'package:first_platoon/core/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
 class UserLoginView extends StatelessWidget {
@@ -39,17 +40,6 @@ class UserLoginView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Text("Name"),
-                      // SizedBox(height: Get.size.height * 0.01),
-                      // TextFormField(
-                      //   validator: (val) {
-                      //     if (val == null || val.isEmpty) {
-                      //       return "Enter User Name";
-                      //     } else {
-                      //       return null;
-                      //     }
-                      //   },
-                      // ),
                       SizedBox(height: Get.size.height * 0.03),
                       Text("Enter Code"),
                       SizedBox(height: Get.size.height * 0.01),
@@ -63,35 +53,23 @@ class UserLoginView extends StatelessWidget {
                           }
                         },
                       ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //     Padding(
-                      //       padding: const EdgeInsets.symmetric(
-                      //           vertical: 20, horizontal: 20),
-                      //       child: Text(
-                      //         "Go Back",
-                      //         style: TextStyle(
-                      //           color: Colors.blue,
-                      //           decoration: TextDecoration.underline,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
                       SizedBox(height: Get.size.height * 0.08),
-                      Center(
-                        child: kAppButton(
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              ctrl.loginAsUser(context);
-                            }
-                          },
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 50),
-                          label: "Login",
-                        ),
-                      ),
+                      Obx(() {
+                        return Center(
+                          child: ctrl.onLogin.value
+                              ? const CircularProgressIndicator()
+                              : kAppButton(
+                                  onPressed: () {
+                                    if (formKey.currentState!.validate()) {
+                                      ctrl.loginAsUser(context);
+                                    }
+                                  },
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 50),
+                                  label: "Login",
+                                ),
+                        );
+                      }),
                     ],
                   ),
                 ),

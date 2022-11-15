@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:first_platoon/controllers/add_compaigns_controller.dart';
 import 'package:first_platoon/core/components/app_button.dart';
-import 'package:first_platoon/views/admin_view/add_new/add_schedule_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -82,7 +81,7 @@ class AddTasksView extends StatelessWidget {
                               // ctrl.taskMembers.value =
                               //     ctrl.taskMembers.toSet().toList();
                             },
-                            label: Text('${e['name']}${e['id']}'),
+                            label: Text(e['name']),
                           ),
                         )
                         .toList(),
@@ -120,7 +119,7 @@ class AddTasksView extends StatelessWidget {
                               deleteIcon: Icon(Icons.add, size: 20),
                               padding: EdgeInsets.all(1),
                               label: Text(
-                                '${ctrl.members[index]['name']}${ctrl.members[index]['id']}',
+                                ctrl.members[index]['name'],
                               ),
                             ),
                           );
@@ -134,29 +133,35 @@ class AddTasksView extends StatelessWidget {
                   onEmpty: const Center(
                     child: Text("Search by typing"),
                   ),
-                  onLoading: Center(child: Text("")),
+                  onLoading: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
               ),
               Center(
-                child: Column(
-                  children: [
-                    kAppButton(
-                      onPressed: () {
-                        ctrl.addTask();
-                      },
-                      label: "Generate Task",
-                      padding: EdgeInsets.all(10),
-                    ),
-                    SizedBox(height: size.height * 0.04),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.cancel,
-                        ))
-                  ],
-                ),
+                child: Obx(() {
+                  return ctrl.indicator.value
+                      ? CircularProgressIndicator()
+                      : Column(
+                          children: [
+                            kAppButton(
+                              onPressed: () {
+                                ctrl.addTask();
+                              },
+                              label: "Generate Task",
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                            ),
+                            SizedBox(height: size.height * 0.04),
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(
+                                  Icons.cancel,
+                                ))
+                          ],
+                        );
+                }),
               ),
             ],
           ),

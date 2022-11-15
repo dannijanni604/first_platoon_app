@@ -2,8 +2,8 @@ import 'package:first_platoon/controllers/auth_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/components/app_button.dart';
 import 'package:first_platoon/core/theme.dart';
-import 'package:first_platoon/views/admin_view/admin_login_view.dart';
-import 'package:first_platoon/views/user_view/user_login_view.dart';
+import 'package:first_platoon/views/auth_views/admin_login_view.dart';
+import 'package:first_platoon/views/auth_views/user_login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -43,7 +43,7 @@ class AuthOptionsView extends StatelessWidget {
                     const Text(
                       "Login as admin",
                       style: TextStyle(
-                        color: Colors.white,
+                        // color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -96,7 +96,6 @@ class AuthOptionsView extends StatelessWidget {
                       child: const Icon(
                         Icons.arrow_right_alt_rounded,
                         size: 40,
-                        color: Colors.white,
                       ),
                     ),
                   ],

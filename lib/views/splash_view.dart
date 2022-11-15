@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_platoon/core/theme.dart';
-import 'package:first_platoon/views/admin_view/admin_home_view.dart';
-import 'package:first_platoon/views/user_view/user_home_view.dart';
+import 'package:first_platoon/views/admin_view/admin_home_tabs.dart';
+import 'package:first_platoon/views/user_view/user_tabs_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
