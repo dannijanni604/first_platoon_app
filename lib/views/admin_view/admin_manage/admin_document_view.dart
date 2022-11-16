@@ -14,7 +14,7 @@ class DocumentView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Decoments View"),
+        title: const Text("Download To View"),
       ),
       body: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -46,7 +46,11 @@ class DocumentView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(ctrl.extension),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 18.0, horizontal: 10),
+                      child: Text(ctrl.extension),
+                    ),
                     IconButton(
                       onPressed: () {
                         ctrl.downloadAndOpenFile(
@@ -82,7 +86,11 @@ class DocumentView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(ctrl.extension),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 18.0, horizontal: 10),
+                    child: Text(ctrl.extension),
+                  ),
                   IconButton(
                     onPressed: () {
                       ctrl.downloadAndOpenFile(
@@ -101,10 +109,10 @@ class DocumentView extends StatelessWidget {
           }
         }),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: const Text("Open"),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () {},
+      //   label: const Text("Open"),
+      // ),
     );
   }
 }
