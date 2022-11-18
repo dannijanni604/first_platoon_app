@@ -1,3 +1,4 @@
+import 'package:first_platoon/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -6,8 +7,13 @@ List<Meeting> getDataSource(List<Map<String, dynamic>> data) {
 
   for (var e in data) {
     meetings.add(
-      Meeting(e['task'], DateTime.now(), e['date'].toDate(),
-          Colors.green.shade400, true),
+      Meeting(
+        e['task'],
+        DateTime.now(),
+        e['date'].toDate(),
+        AppTheme.kprimaryColor.withOpacity(0.5),
+        true,
+      ),
     );
   }
 

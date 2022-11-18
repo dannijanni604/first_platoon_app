@@ -15,7 +15,9 @@ class AdminHitlistView extends StatelessWidget {
     final ctrl = Get.put(HitlistController());
     return Scaffold(
       appBar: AppBar(
-          automaticallyImplyLeading: false, title: const Text("HitList")),
+        automaticallyImplyLeading: false,
+        title: const Text("HitList"),
+      ),
       body: StreamBuilder(
         stream: DB.tasks
             .where('doc_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -39,30 +41,16 @@ class AdminHitlistView extends StatelessWidget {
                         task: task,
                       );
                     },
-                    child: Column(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // IconButton(
-                        //   onPressed: () {
-                        //     DB.tasks
-                        //         .doc(snapshot.data!.docs[index].id)
-                        //         .delete();
-                        //   },
-                        //   icon: Icon(Icons.delete),
-                        // ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(snapshot.data!.docs[index]
-                                .data()['due_date']
-                                .toString()
-                                .substring(0, 11)),
-                          ],
+                        Expanded(
+                          child: Text(task, style: Const.labelText()),
                         ),
-                        Row(
-                          children: [
-                            Text(task, style: Const.labelText()),
-                          ],
-                        ),
+                        Text(snapshot.data!.docs[index]
+                            .data()['due_date']
+                            .toString()
+                            .substring(0, 11)),
                       ],
                     ),
                   );

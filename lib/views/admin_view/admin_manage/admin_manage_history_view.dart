@@ -4,6 +4,8 @@ import 'package:first_platoon/core/components/app_tile.dart';
 import 'package:first_platoon/core/db.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/functions.dart';
+
 class AdminManageHistoryView extends StatelessWidget {
   const AdminManageHistoryView({super.key});
 
@@ -29,19 +31,17 @@ class AdminManageHistoryView extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // IconButton(
-                          //   onPressed: () {
-                          //     DB.schedules
-                          //         .doc(snapshot.data!.docs[index].id)
-                          //         .delete();
-                          //   },
-                          //   icon: Icon(Icons.delete),
-                          // ),
                           Text(
                             ' Submited By ${snapshot.data!.docs[index].data()['submitted_by'].toString()}',
                           ),
-                          Text(
-                              'Status : ${snapshot.data!.docs[index].data()['status']} ')
+                          Chip(
+                            backgroundColor: statusColor(
+                              snapshot.data!.docs[index].data()['status'],
+                            ),
+                            label: Text(
+                              snapshot.data!.docs[index].data()['status'],
+                            ),
+                          )
                         ],
                       ),
                     ],
@@ -61,6 +61,5 @@ class AdminManageHistoryView extends StatelessWidget {
             );
           }
         });
-    ;
   }
 }

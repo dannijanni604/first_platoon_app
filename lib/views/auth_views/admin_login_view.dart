@@ -43,7 +43,7 @@ class AdminLoginView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Enter Email"),
+                      const Text("Enter Email"),
                       SizedBox(height: Get.size.height * 0.01),
                       TextFormField(
                         controller: ctrl.adminEmailController,
@@ -52,10 +52,11 @@ class AdminLoginView extends StatelessWidget {
                         },
                       ),
                       SizedBox(height: Get.size.height * 0.03),
-                      Text("Enter Pasword"),
+                      const Text("Enter Pasword"),
                       SizedBox(height: Get.size.height * 0.01),
                       TextFormField(
                         controller: ctrl.adminPasswordController,
+                        obscureText: true,
                         validator: (val) {
                           if (val == null || val.isEmpty) {
                             return "Enter Code To Login";
@@ -86,13 +87,14 @@ class AdminLoginView extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              appNavPush(context, const AdminSignUpView());
+                              appNavPush(
+                                  context, const AdminSignUpView());
                             },
                             child: const Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: 20, horizontal: 20),
                               child: Text(
-                                "Register",
+                                "Signup",
                                 style: TextStyle(
                                   color: Colors.blue,
                                   decoration: TextDecoration.underline,

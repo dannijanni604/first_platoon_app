@@ -22,15 +22,6 @@ class AdminSignUpView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // IconButton(
-                //   onPressed: () {
-                //     Get.back();
-                //   },
-                //   icon: const Icon(
-                //     Icons.arrow_back_ios_new,
-                //     size: 25,
-                //   ),
-                // ),
                 SizedBox(height: Get.size.height * 0.03),
                 Text("Welcome To First Platoon", style: Const.labelText()),
                 SizedBox(height: Get.size.height * 0.03),

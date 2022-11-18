@@ -3,6 +3,7 @@ import 'package:first_platoon/controllers/auth_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/db.dart';
 import 'package:first_platoon/models/metting_model.dart';
+import 'package:first_platoon/views/auth_views/admin_signup_view.dart';
 import 'package:first_platoon/views/auth_views/auth_options_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,22 +41,28 @@ class AdminScheduleView extends StatelessWidget {
               // viewHeaderHeight: -5,
               headerHeight: 40,
               onTap: (CalendarTapDetails detail) {},
-              view: CalendarView.month,
+              view: CalendarView.schedule,
               cellBorderColor: Colors.transparent,
+              scheduleViewSettings: const ScheduleViewSettings(
+                appointmentItemHeight: 60,
+              ),
               monthViewSettings: const MonthViewSettings(
-                  appointmentDisplayCount: 3,
-                  agendaItemHeight: 50,
-                  monthCellStyle: MonthCellStyle(),
-                  agendaStyle: AgendaStyle(
-                    appointmentTextStyle: TextStyle(
-                      color: Colors.black,
-                    ),
+                appointmentDisplayCount: 3,
+                agendaItemHeight: 50,
+                monthCellStyle: MonthCellStyle(),
+                agendaStyle: AgendaStyle(
+                  appointmentTextStyle: TextStyle(
+                    color: Colors.black,
                   ),
-                  appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
-                  showAgenda: true),
-              dataSource: MeetingDataSource(getDataSource(
-                snapshot.data!.docs.map((e) => e.data()).toList(),
-              )),
+                ),
+                appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+                showAgenda: true,
+              ),
+              dataSource: MeetingDataSource(
+                getDataSource(
+                  snapshot.data!.docs.map((e) => e.data()).toList(),
+                ),
+              ),
             );
           } else if (snapshot.hasError) {
             return Center(

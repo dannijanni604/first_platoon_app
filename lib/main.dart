@@ -28,17 +28,21 @@ class FirtsPlatoon extends StatelessWidget {
         fontFamily: "montserrat",
         // accentIconTheme: IconThemeData(size: 30),
 
-        iconTheme: IconThemeData(size: 30),
+        iconTheme: const IconThemeData(size: 30),
 
         // scaffoldBackgroundColor: Color(0xFFFCFBF4),
         appBarTheme: const AppBarTheme(
           backgroundColor: AppTheme.kprimaryColor,
           elevation: 0,
         ),
-        inputDecorationTheme: const InputDecorationTheme(
-            border: OutlineInputBorder(),
-            fillColor: Colors.white,
-            filled: true),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(50),
+          ),
+          fillColor: Colors.white,
+          filled: true,
+        ),
       ),
       home: const SplashView(),
     );

@@ -104,3 +104,15 @@ showMembersBottomSheet(
   //   elevation: 8.0,
   // );
 }
+
+Color statusColor(String status) {
+  status = status.toLowerCase();
+  switch (status) {
+    case 'approved':
+      return Colors.green;
+    case 'processing':
+      return Colors.yellow;
+    default:
+  }
+  return Colors.grey;
+}
