@@ -1,7 +1,7 @@
-import 'dart:developer';
 import 'package:first_platoon/controllers/add_compaigns_controller.dart';
 import 'package:first_platoon/core/components/app_button.dart';
 import 'package:first_platoon/core/components/snackbar.dart';
+import 'package:first_platoon/core/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,14 +45,9 @@ class AddScheduleView extends StatelessWidget {
               TextFormField(
                 controller: ctrl.scheduledateController,
                 onTap: () async {
-                  ctrl.scheduledDateTime = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2201));
-
+                  ctrl.scheduledDateTime = await dateTimeRangePicker(context);
                   ctrl.scheduledateController.text =
-                      ctrl.scheduledDateTime.toString().substring(0, 10);
+                      ctrl.scheduledDateTime.toString();
                 },
                 decoration: const InputDecoration(
                   suffixIcon: Icon(Icons.calendar_today),
@@ -109,26 +104,24 @@ class AddScheduleView extends StatelessWidget {
                 child: ctrl.obx(
                   (state) {
                     if (ctrl.members.isNotEmpty) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: ctrl.members.length,
-                        itemBuilder: (context, index) {
-                          return Align(
-                            alignment: Alignment.topLeft,
-                            child: Chip(
+                      return Wrap(
+                        direction: Axis.horizontal,
+                        spacing: 5,
+                        runSpacing: -3,
+                        children: [
+                          ...ctrl.members.map((e) {
+                            return Chip(
                               onDeleted: () {
-                                ctrl.scheduleMembers.add(ctrl.members[index]);
-                                log(ctrl.scheduleMembers.toString());
+                                ctrl.scheduleMembers.add(e);
                               },
                               deleteIcon: Icon(Icons.add, size: 20),
                               padding: EdgeInsets.all(1),
                               label: Text(
-                                ctrl.members[index]['name'],
+                                e['name'],
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          }).toList(),
+                        ],
                       );
                     }
                     return const Center(

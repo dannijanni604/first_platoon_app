@@ -15,7 +15,7 @@ class Const {
     RegExp regex =
         RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
     if (value.isEmpty) {
-      return 'Please enter code';
+      return 'Please enter password';
     } else {
       if (!regex.hasMatch(value)) {
         return 'Code must contain 1 spacial, capital latter, numbers and 8 length';

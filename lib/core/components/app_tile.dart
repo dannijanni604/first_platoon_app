@@ -12,7 +12,7 @@ appTile({
       alignment: Alignment.center,
       margin: EdgeInsets.all(10),
       width: Get.size.width * 0.95,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -21,8 +21,8 @@ appTile({
         //   BoxShadow(
         //     color: Colors.black12,
         //     spreadRadius: 1,
-        //     blurRadius: 1,
-        //     offset: Offset(0.6, -0.1),
+        //     blurRadius: 5,
+        //     offset: Offset(0, 1),
         //   ),
         // ],
       ),

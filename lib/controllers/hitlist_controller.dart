@@ -60,23 +60,18 @@ class HitlistController extends GetxController {
     isClicked(true);
     final name = GetStorage().read('name');
     try {
-      if (pickedFile.isNotEmpty) {
-        await uplodDecoments();
-        await DB.tasks.doc(snapshot!.data!.docs[index!].id).update({
-          "documents": FieldValue.arrayUnion(pickedFileUrls),
-          "submitted_by": name,
-          "submitted_at": FieldValue.serverTimestamp(),
-          'status': "processing",
-        });
-        pickedFile.clear();
-        pickedFileUrls.clear();
-        isClicked(false);
-        Get.back();
-        ksucessSnackbar(message: "Task Submited SuccesFully");
-      } else {
-        isClicked(false);
-        kerrorSnackbar(message: "Select Files To Submit Task");
-      }
+      await uplodDecoments();
+      await DB.tasks.doc(snapshot!.data!.docs[index!].id).update({
+        "documents": FieldValue.arrayUnion(pickedFileUrls),
+        "submitted_by": name,
+        "submitted_at": FieldValue.serverTimestamp(),
+        'status': "processing",
+      });
+      pickedFile.clear();
+      pickedFileUrls.clear();
+      isClicked(false);
+      Get.back();
+      ksucessSnackbar(message: "Task Submited SuccesFully");
     } catch (e) {
       isClicked(false);
       kerrorSnackbar(message: e.toString());

@@ -1,11 +1,11 @@
 import 'package:first_platoon/core/app_navigator.dart';
+import 'package:first_platoon/core/components/app_tile.dart';
+import 'package:first_platoon/core/const.dart';
 import 'package:first_platoon/core/db.dart';
 import 'package:first_platoon/core/theme.dart';
-import 'package:first_platoon/models/metting_model.dart';
 import 'package:first_platoon/views/auth_views/auth_options_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class UserScheduleView extends StatelessWidget {
   const UserScheduleView({super.key});
@@ -32,26 +32,41 @@ class UserScheduleView extends StatelessWidget {
         stream: DB.schedules.where('members', arrayContains: id).snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
-            return SfCalendar(
-              minDate: DateTime.now(),
-              onTap: (CalendarTapDetails detail) {},
-              view: CalendarView.month,
-              cellBorderColor: Colors.transparent,
-              monthViewSettings: const MonthViewSettings(
-                  appointmentDisplayCount: 3,
-                  agendaItemHeight: 50,
-                  monthCellStyle: MonthCellStyle(),
-                  agendaStyle: AgendaStyle(
-                    appointmentTextStyle: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
-                  showAgenda: true),
-              dataSource: MeetingDataSource(getDataSource(
-                snapshot.data!.docs.map((e) => e.data()).toList(),
-              )),
-            );
+            return snapshot.data!.docs.isEmpty
+                ? Center(child: Text("No Schdeule"))
+                : ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: ((context, index) {
+                      String initialDate = snapshot.data!.docs[index]
+                          .data()['date']
+                          .toString()
+                          .substring(0, 10);
+
+                      String endDate = snapshot.data!.docs[index]
+                          .data()['date']
+                          .toString()
+                          .substring(26, 36);
+                      return appTile(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                  snapshot.data!.docs[index].data()['schdule'],
+                                  style: Const.labelText()),
+                            ),
+                            Text("$initialDate"),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Text(" - To - ",
+                                  style: Theme.of(context).textTheme.button),
+                            ),
+                            Text("$endDate"),
+                          ],
+                        ),
+                      );
+                    }));
           } else if (snapshot.hasError) {
             return Center(
               child: Text(

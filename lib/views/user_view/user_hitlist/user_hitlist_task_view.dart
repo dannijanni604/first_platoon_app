@@ -25,39 +25,44 @@ class UserHitListTaskView extends StatelessWidget {
           .snapshots(),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
-          return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                return appTile(
-                  onpress: () {
-                    showUserHitlitBottomSheet(
-                      context: context,
-                      index: index,
-                      snapshot: snapshot,
-                    );
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // IconButton(
-                      //   onPressed: () {
-                      //     DB.tasks.doc(snapshot.data!.docs[index].id).delete();
-                      //   },
-                      //   icon: Icon(Icons.delete),
-                      // ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+          return snapshot.data!.docs.isEmpty
+              ? const Center(
+                  child: Text("No Task"),
+                )
+              : ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    return appTile(
+                      onpress: () {
+                        showUserHitlitBottomSheet(
+                          context: context,
+                          index: index,
+                          snapshot: snapshot,
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(snapshot.data!.docs[index].data()['due_date']),
+                          // IconButton(
+                          //   onPressed: () {
+                          //     DB.tasks.doc(snapshot.data!.docs[index].id).delete();
+                          //   },
+                          //   icon: Icon(Icons.delete),
+                          // ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(snapshot.data!.docs[index]
+                                  .data()['due_date']),
+                            ],
+                          ),
+                          Text(snapshot.data!.docs[index].data()['task'],
+                              style: Const.labelText()),
+                          // Text(snapshot.data!.docs[index].data()['auth_id']),
                         ],
                       ),
-                      Text(snapshot.data!.docs[index].data()['task'],
-                          style: Const.labelText()),
-                      // Text(snapshot.data!.docs[index].data()['auth_id']),
-                    ],
-                  ),
-                );
-              });
+                    );
+                  });
         }
         if (snapshot.hasError) {
           return Center(child: Text(snapshot.error.toString()));

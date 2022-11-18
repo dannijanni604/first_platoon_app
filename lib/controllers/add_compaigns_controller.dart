@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:first_platoon/core/db.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddCompaignsConteroller extends GetxController with StateMixin {
@@ -22,7 +23,7 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
 // Schedule
   final scheduleTaskController = TextEditingController();
   final scheduledateController = TextEditingController();
-  DateTime? scheduledDateTime;
+  DateTimeRange? scheduledDateTime;
   final scheduleMemberController = TextEditingController();
   final scheduleformkey = GlobalKey<FormState>();
   // get scheduleformkey => _scheduleformkey;
@@ -47,8 +48,8 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
       await DB.schedules.doc().set(
         {
           'auth_id': FirebaseAuth.instance.currentUser!.uid,
-          'task': scheduleTaskController.text,
-          'date': scheduledDateTime,
+          'schdule': scheduleTaskController.text,
+          'date': scheduledDateTime.toString(),
           'members': FieldValue.arrayUnion(
               scheduleMembers.map((e) => e['id']).toList()),
         },
@@ -118,8 +119,7 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
         //   return false;
         // });
         bool isCodeExist = await DB.members
-            .where('code',
-                isEqualTo: genetrateCodeController.text.toLowerCase())
+            .where('code', isEqualTo: genetrateCodeController.text)
             .get()
             .then<bool>((value) {
           if (value.docs.isNotEmpty) {
@@ -128,7 +128,8 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
           return false;
         });
         if (isCodeExist) {
-          return kerrorSnackbar(message: "Code is already exist try another");
+          return kerrorSnackbar(
+              message: "User is already exist try another code");
         } else {
           DB.members.doc().set(
             {
@@ -136,6 +137,7 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
               'name_search_terms': getSearchTerms(memberNameController.text),
               'code': genetrateCodeController.text,
               'created_at': DateTime.now(),
+              'auth_id': FirebaseAuth.instance.currentUser!.uid,
               // 'id': DB.members.id,
             },
           );
@@ -163,6 +165,7 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
         members.clear();
         change(members, status: RxStatus.loading());
         QuerySnapshot<Map<String, dynamic>> doc = await DB.members
+            .where('auth_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .where('name_search_terms', arrayContains: text)
             .get();
         if (doc.docs.isNotEmpty) {

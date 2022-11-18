@@ -19,46 +19,42 @@ class UserHitListHistoryView extends StatelessWidget {
           .snapshots(),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
-          return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                return appTile(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          snapshot.data!.docs.isEmpty
+              ? const Center(
+                  child: Text("No History"),
+                )
+              : ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    return appTile(
+                      child: Column(
                         children: [
-                          Text(snapshot.data!.docs[index].data()['task']),
-                          Text(DateTime.now().toString().substring(0, 10)),
-                          // Text(snapshot.data!.docs[index]
-                          //         .data()['submitted_at']
-                          //         .toDate()
-                          //         .toString() ??
-                          //     ""),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // IconButton(
-                          //   onPressed: () {
-                          //     DB.tasks
-                          //         .doc(snapshot.data!.docs[index].id)
-                          //         .delete();
-                          //   },
-                          //   icon: Icon(Icons.delete),
-                          // ),
-                          Text("Status :", style: Const.labelText()),
-                          Text(
-                            '${snapshot.data!.docs[index].data()['status']}',
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(snapshot.data!.docs[index].data()['task']),
+                              Text(DateTime.now().toString().substring(0, 10)),
+                              // Text(snapshot.data!.docs[index]
+                              //         .data()['submitted_at']
+                              //         .toDate()
+                              //         .toString() ??
+                              //     ""),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Status :", style: Const.labelText()),
+                              Text(
+                                '${snapshot.data!.docs[index].data()['status']}',
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                );
-              });
+                    );
+                  });
         }
         if (snapshot.hasError) {
           return Center(child: Text(snapshot.error.toString()));

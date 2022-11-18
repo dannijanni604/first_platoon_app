@@ -66,35 +66,34 @@ class AdminLoginView extends StatelessWidget {
                         },
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     appNavPush(
+                          //         context, const AdminForgetPasswordView());
+                          //   },
+                          //   child: const Padding(
+                          //     padding: EdgeInsets.symmetric(
+                          //         vertical: 20, horizontal: 20),
+                          //     child: Text(
+                          //       "Forget Password",
+                          //       style: TextStyle(
+                          //         color: Colors.blue,
+                          //         decoration: TextDecoration.underline,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           GestureDetector(
                             onTap: () {
-                              appNavPush(
-                                  context, const AdminForgetPasswordView());
+                              appNavPush(context, const AdminSignUpView());
                             },
                             child: const Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: 20, horizontal: 20),
                               child: Text(
-                                "Forget Password",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              appNavPush(
-                                  context, const AdminSignUpView());
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 20),
-                              child: Text(
-                                "Signup",
+                                "Register",
                                 style: TextStyle(
                                   color: Colors.blue,
                                   decoration: TextDecoration.underline,

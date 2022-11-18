@@ -23,46 +23,43 @@ class AdminManageTaskView extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (((context, index) {
-                return appTile(
-                  onpress: () {
-                    showDialogToCompleteTask(context, index, ctrl, snapshot);
-                  },
-                  child: Column(
-                    children: [
-                      // IconButton(
-                      //   onPressed: () {
-                      //     DB.submittedTask
-                      //         .doc(snapshot.data!.docs[index].id)
-                      //         .delete();
-                      //   },
-                      //   icon: Icon(Icons.delete),
-                      // ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(snapshot.data!.docs[index].data()['task']),
-                          Text(snapshot.data!.docs[index]
-                              .data()['submitted_at']
-                              .toDate()
-                              .toString()
-                              .substring(0, 19)),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Text(
-                              ' Submited By ${snapshot.data!.docs[index].data()['submitted_by'].toString().toUpperCase().capitalizeFirst} '),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              })),
-            );
+            return snapshot.data!.docs.isEmpty
+                ? const Center(
+                    child: Text("No Task"),
+                  )
+                : ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (((context, index) {
+                      return appTile(
+                        onpress: () {
+                          showDialogToCompleteTask(
+                              context, index, ctrl, snapshot);
+                        },
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(snapshot.data!.docs[index].data()['task']),
+                                Text(snapshot.data!.docs[index]
+                                    .data()['submitted_at']
+                                    .toDate()
+                                    .toString()
+                                    .substring(0, 19)),
+                              ],
+                            ),
+                            const SizedBox(height: 5),
+                            Row(
+                              children: [
+                                Text(
+                                    ' Submited by : ${snapshot.data!.docs[index].data()['submitted_by'].toString().toUpperCase().capitalizeFirst} '),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    })),
+                  );
           } else if (snapshot.hasError) {
             return Center(
               child: Text(

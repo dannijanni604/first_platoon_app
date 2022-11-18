@@ -52,9 +52,9 @@ showMembersBottomSheet(
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 80),
+              margin: const EdgeInsets.only(top: 80),
               height: 200,
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -76,7 +76,7 @@ showMembersBottomSheet(
                             return Center(
                                 child: Text(snapshot.error.toString()));
                           }
-                          return CircularProgressIndicator();
+                          return const Text("________");
                         },
                       ),
                     )
@@ -115,4 +115,18 @@ Color statusColor(String status) {
     default:
   }
   return Colors.grey;
+}
+
+Future<DateTimeRange?> dateTimeRangePicker(BuildContext context) async {
+  DateTimeRange? picked = await showDateRangePicker(
+    context: context,
+    firstDate: DateTime(DateTime.now().year - 5),
+    lastDate: DateTime(DateTime.now().year + 5),
+    initialDateRange: DateTimeRange(
+      end: DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day + 13),
+      start: DateTime.now(),
+    ),
+  );
+  return picked;
 }

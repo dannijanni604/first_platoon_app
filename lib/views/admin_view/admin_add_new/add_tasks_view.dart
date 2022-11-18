@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:first_platoon/controllers/add_compaigns_controller.dart';
 import 'package:first_platoon/core/components/app_button.dart';
 import 'package:flutter/material.dart';
@@ -101,29 +99,29 @@ class AddTasksView extends StatelessWidget {
                 },
               ),
               Container(
+                padding: const EdgeInsets.all(5),
                 height: 200,
                 child: ctrl.obx(
                   (state) {
                     if (ctrl.members.isNotEmpty) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: ctrl.members.length,
-                        itemBuilder: (context, index) {
-                          return Align(
-                            alignment: Alignment.topLeft,
-                            child: Chip(
+                      return Wrap(
+                        direction: Axis.horizontal,
+                        spacing: 5,
+                        runSpacing: -3,
+                        children: [
+                          ...ctrl.members.map((e) {
+                            return Chip(
                               onDeleted: () {
-                                ctrl.taskMembers.add(ctrl.members[index]);
+                                ctrl.taskMembers.add(e);
                               },
                               deleteIcon: Icon(Icons.add, size: 20),
                               padding: EdgeInsets.all(1),
                               label: Text(
-                                ctrl.members[index]['name'],
+                                e['name'],
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          }).toList(),
+                        ],
                       );
                     }
                     return const Center(

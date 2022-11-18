@@ -25,36 +25,40 @@ class AdminHitlistView extends StatelessWidget {
             .snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  List<String> members =
-                      List.from(snapshot.data!.docs[index].data()['members'])
+            return snapshot.data!.docs.isEmpty
+                ? const Center(
+                    child: Text("No Task"),
+                  )
+                : ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      List<String> members = List.from(
+                              snapshot.data!.docs[index].data()['members'])
                           .cast<String>();
-                  String task = snapshot.data!.docs[index].data()['task'];
+                      String task = snapshot.data!.docs[index].data()['task'];
 
-                  return appTile(
-                    onpress: () {
-                      showMembersBottomSheet(
-                        context: context,
-                        members: members,
-                        task: task,
-                      );
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(task, style: Const.labelText()),
+                      return appTile(
+                        onpress: () {
+                          showMembersBottomSheet(
+                            context: context,
+                            members: members,
+                            task: task,
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(task, style: Const.labelText()),
+                            ),
+                            Text(snapshot.data!.docs[index]
+                                .data()['due_date']
+                                .toString()
+                                .substring(0, 11)),
+                          ],
                         ),
-                        Text(snapshot.data!.docs[index]
-                            .data()['due_date']
-                            .toString()
-                            .substring(0, 11)),
-                      ],
-                    ),
-                  );
-                });
+                      );
+                    });
           } else {
             return const Center(
               child: CircularProgressIndicator(),

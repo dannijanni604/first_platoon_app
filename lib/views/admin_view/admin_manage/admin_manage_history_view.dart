@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:first_platoon/core/components/app_tile.dart';
 import 'package:first_platoon/core/db.dart';
@@ -12,43 +13,50 @@ class AdminManageHistoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: DB.tasks.where('status', isEqualTo: 'approved').snapshots(),
+        stream: DB.tasks
+            .where('status', isEqualTo: 'approved')
+            .where("doc_id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (((context, index) {
-                return appTile(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(snapshot.data!.docs[index].data()['task']),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            ' Submited By ${snapshot.data!.docs[index].data()['submitted_by'].toString()}',
-                          ),
-                          Chip(
-                            backgroundColor: statusColor(
-                              snapshot.data!.docs[index].data()['status'],
+            return snapshot.data!.docs.isEmpty
+                ? const Center(
+                    child: Text("No History"),
+                  )
+                : ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (((context, index) {
+                      return appTile(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(snapshot.data!.docs[index].data()['task']),
+                              ],
                             ),
-                            label: Text(
-                              snapshot.data!.docs[index].data()['status'],
+                            const SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  ' Submited by : ${snapshot.data!.docs[index].data()['submitted_by'].toString()}',
+                                ),
+                                Chip(
+                                  backgroundColor: statusColor(
+                                    snapshot.data!.docs[index].data()['status'],
+                                  ),
+                                  label: Text(
+                                    snapshot.data!.docs[index].data()['status'],
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              })),
-            );
+                          ],
+                        ),
+                      );
+                    })),
+                  );
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
