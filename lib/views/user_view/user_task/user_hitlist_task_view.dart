@@ -20,6 +20,7 @@ class UserHitListTaskView extends StatelessWidget {
 
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: DB.tasks
+          // .orderBy('due_date', descending: false)
           .where('members', arrayContains: id)
           .where('status', isNull: true)
           .snapshots(),
@@ -43,12 +44,6 @@ class UserHitListTaskView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // IconButton(
-                          //   onPressed: () {
-                          //     DB.tasks.doc(snapshot.data!.docs[index].id).delete();
-                          //   },
-                          //   icon: Icon(Icons.delete),
-                          // ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -63,8 +58,7 @@ class UserHitListTaskView extends StatelessWidget {
                       ),
                     );
                   });
-        }
-        if (snapshot.hasError) {
+        } else if (snapshot.hasError) {
           return Center(child: Text(snapshot.error.toString()));
         } else {
           return const Center(

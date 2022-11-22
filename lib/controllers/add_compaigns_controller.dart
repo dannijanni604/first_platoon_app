@@ -1,11 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:first_platoon/core/db.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddCompaignsConteroller extends GetxController with StateMixin {
   @override
@@ -42,6 +44,15 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
   final _memberformkey = GlobalKey<FormState>();
   get memberformkey => _memberformkey;
 
+// groups
+
+  final groupMemberController = TextEditingController();
+  final groupNameController = TextEditingController();
+
+  String? groupId;
+
+  List<String> adminJoinedGroupsIds = [];
+
   Future addSchedule() async {
     indicator(true);
     try {
@@ -72,6 +83,7 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
     if (_taskformkey.currentState!.validate()) {
       if (taskMembers.isNotEmpty) {
         indicator(true);
+        // String groupId = GetStorage().read('group_id');
         try {
           await DB.tasks.doc().set(
             {
@@ -109,15 +121,6 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
     if (_memberformkey.currentState!.validate()) {
       indicator(true);
       try {
-        // bool isUserExist = await DB.members
-        //     .where('member', isEqualTo: memberNameController.text.toLowerCase())
-        //     .get()
-        //     .then<bool>((value) {
-        //   if (value.docs.isNotEmpty) {
-        //     return true;
-        //   }
-        //   return false;
-        // });
         bool isCodeExist = await DB.members
             .where('code', isEqualTo: genetrateCodeController.text)
             .get()
@@ -138,7 +141,6 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
               'code': genetrateCodeController.text,
               'created_at': DateTime.now(),
               'auth_id': FirebaseAuth.instance.currentUser!.uid,
-              // 'id': DB.members.id,
             },
           );
           memberNameController.clear();

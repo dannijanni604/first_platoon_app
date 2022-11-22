@@ -9,6 +9,8 @@ class DB {
       FirebaseFirestore.instance.collection("tasks");
   static CollectionReference<Map<String, dynamic>> members =
       FirebaseFirestore.instance.collection("members");
+  static CollectionReference<Map<String, dynamic>> groups =
+      FirebaseFirestore.instance.collection("groups");
   // static CollectionReference<Map<String, dynamic>> submittedTask =
   //     FirebaseFirestore.instance.collection("submittedTask");
 }

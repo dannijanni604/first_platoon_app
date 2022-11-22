@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:first_platoon/core/components/app_tile.dart';
+import 'package:first_platoon/core/const.dart';
 import 'package:first_platoon/core/db.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,8 @@ class AdminManageHistoryView extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(snapshot.data!.docs[index].data()['task']),
+                                Text(snapshot.data!.docs[index].data()['task'],
+                                    style: Const.labelText()),
                               ],
                             ),
                             const SizedBox(height: 5),
@@ -42,14 +44,20 @@ class AdminManageHistoryView extends StatelessWidget {
                                 Text(
                                   ' Submited by : ${snapshot.data!.docs[index].data()['submitted_by'].toString()}',
                                 ),
-                                Chip(
-                                  backgroundColor: statusColor(
-                                    snapshot.data!.docs[index].data()['status'],
-                                  ),
-                                  label: Text(
-                                    snapshot.data!.docs[index].data()['status'],
-                                  ),
-                                )
+                                statusChip(
+                                  label: snapshot.data!.docs[index]
+                                      .data()['status'],
+                                  color: snapshot.data!.docs[index]
+                                      .data()['status'],
+                                ),
+                                // Chip(
+                                //   backgroundColor: statusColor(
+                                //     snapshot.data!.docs[index].data()['status'],
+                                //   ),
+                                //   label: Text(
+                                //     snapshot.data!.docs[index].data()['status'],
+                                //   ),
+                                // )
                               ],
                             ),
                           ],

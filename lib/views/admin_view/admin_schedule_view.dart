@@ -1,4 +1,7 @@
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_platoon/controllers/add_compaigns_controller.dart';
 import 'package:first_platoon/controllers/auth_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/components/app_tile.dart';
@@ -7,6 +10,7 @@ import 'package:first_platoon/core/db.dart';
 import 'package:first_platoon/views/auth_views/auth_options_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class AdminScheduleView extends StatelessWidget {
   const AdminScheduleView({super.key});
@@ -25,7 +29,45 @@ class AdminScheduleView extends StatelessWidget {
               appNavReplace(context, const AuthOptionsView());
             },
             icon: const Icon(Icons.logout_outlined),
+          ),
+          TextButton(
+            onPressed: () async {
+              // to put auth id
+              DB.groups.doc().set({
+                "admin_ids": FieldValue.arrayUnion(
+                  [FirebaseAuth.instance.currentUser!.uid],
+                ),
+              });
+
+              // to get group id where admin exist
+              QuerySnapshot<Map<String, dynamic>> doc = await DB.groups
+                  .where("admin_ids",
+                      isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                  .get();
+              doc.docs.map((e) {
+                GetStorage().write('group_id', e.id);
+              });
+
+              // now when the admin create schdule and task
+
+              // check AddCompaignsConteroller.addTask/addSchdule
+            },
+            child: Text("Join Gruop"),
           )
+          // PopupMenuButton(onSelected: ((value) async {
+          //   appNavPush(context, AdminCreateOrJoinGroupView(type: value));
+          // }), itemBuilder: (context) {
+          //   return const [
+          //     PopupMenuItem(
+          //       value: "join",
+          //       child: Text("Join Group"),
+          //     ),
+          //     PopupMenuItem(
+          //       value: "create",
+          //       child: Text("Create Group"),
+          //     ),
+          //   ];
+          // }),
         ],
       ),
       body: StreamBuilder(
@@ -86,33 +128,31 @@ class AdminScheduleView extends StatelessWidget {
   }
 }
 
-
-
-          // SfCalendar(
-            //   minDate: DateTime.now(),
-            //   // viewHeaderHeight: -5,
-            //   headerHeight: 40,
-            //   onTap: (CalendarTapDetails detail) {},
-            //   view: CalendarView.schedule,
-            //   cellBorderColor: Colors.transparent,
-            //   scheduleViewSettings: const ScheduleViewSettings(
-            //     appointmentItemHeight: 60,
-            //   ),
-            //   monthViewSettings: const MonthViewSettings(
-            //     appointmentDisplayCount: 3,
-            //     agendaItemHeight: 50,
-            //     monthCellStyle: MonthCellStyle(),
-            //     agendaStyle: AgendaStyle(
-            //       appointmentTextStyle: TextStyle(
-            //         color: Colors.black,
-            //       ),
-            //     ),
-            //     appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
-            //     showAgenda: true,
-            //   ),
-            //   dataSource: MeetingDataSource(
-            //     getDataSource(
-            //       snapshot.data!.docs.map((e) => e.data()).toList(),
-            //     ),
-            //   ),
-            // );
+// SfCalendar(
+//   minDate: DateTime.now(),
+//   // viewHeaderHeight: -5,
+//   headerHeight: 40,
+//   onTap: (CalendarTapDetails detail) {},
+//   view: CalendarView.schedule,
+//   cellBorderColor: Colors.transparent,
+//   scheduleViewSettings: const ScheduleViewSettings(
+//     appointmentItemHeight: 60,
+//   ),
+//   monthViewSettings: const MonthViewSettings(
+//     appointmentDisplayCount: 3,
+//     agendaItemHeight: 50,
+//     monthCellStyle: MonthCellStyle(),
+//     agendaStyle: AgendaStyle(
+//       appointmentTextStyle: TextStyle(
+//         color: Colors.black,
+//       ),
+//     ),
+//     appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+//     showAgenda: true,
+//   ),
+//   dataSource: MeetingDataSource(
+//     getDataSource(
+//       snapshot.data!.docs.map((e) => e.data()).toList(),
+//     ),
+//   ),
+// );

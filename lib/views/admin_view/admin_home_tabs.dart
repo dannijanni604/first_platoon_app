@@ -44,7 +44,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.arrow_circle_up_rounded), label: "Schedule"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.arrow_circle_up_rounded), label: "Hitlist"),
+                icon: Icon(Icons.arrow_circle_up_rounded), label: "Task"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.arrow_circle_up_rounded), label: "Manage"),
           ],

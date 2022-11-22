@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_platoon/core/components/snackbar.dart';
-import 'package:first_platoon/core/const.dart';
 import 'package:first_platoon/core/db.dart';
+import 'package:first_platoon/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,7 +9,7 @@ DateTime? currentBackPressTime;
 Future<bool> onWillPop() {
   DateTime now = DateTime.now();
   if (currentBackPressTime == null ||
-      now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+      now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
     currentBackPressTime = now;
     ksucessSnackbar(message: "Press Again To Exit App");
     return Future.value(false);
@@ -31,9 +31,9 @@ showMembersBottomSheet(
           children: [
             Container(
               padding: EdgeInsets.all(15),
-              height: 80,
+              height: 50,
               decoration: const BoxDecoration(
-                color: Colors.deepOrange,
+                color: AppTheme.kprimaryColor,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -42,21 +42,24 @@ showMembersBottomSheet(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Text(task ?? "", style: Const.labelText(color: Colors.white)),
-                  IconButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      icon: Icon(Icons.cancel_outlined))
+                  const Text("Task Members"),
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: const Icon(
+                      Icons.arrow_drop_down_outlined,
+                    ),
+                  ),
                 ],
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 80),
+              margin: const EdgeInsets.only(top: 50),
               height: 200,
               padding: const EdgeInsets.all(10),
               child: SingleChildScrollView(
-                child: Column(
+                child: Row(
                   children: [
                     ...members!.map(
                       (e) =>
@@ -64,22 +67,33 @@ showMembersBottomSheet(
                         future: DB.members.doc(e).get(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            return PopupMenuItem<String>(
-                              child: Container(
-                                width: Get.size.width,
-                                child: Text(
-                                  snapshot.data!.data()!['name'],
-                                ),
+                            return Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Wrap(
+                                spacing: 5,
+                                runSpacing: -3,
+                                children: [
+                                  Chip(
+                                    backgroundColor: Colors.black12,
+                                    label: Text(snapshot.data!.data()!['name']),
+                                  ),
+                                ],
                               ),
                             );
                           } else if (snapshot.hasError) {
                             return Center(
                                 child: Text(snapshot.error.toString()));
                           }
-                          return const Text("________");
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 22),
+                            child: Transform(
+                              transform: Matrix4.identity()..scale(0.6),
+                              child: const CircularProgressIndicator(),
+                            ),
+                          );
                         },
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -87,34 +101,29 @@ showMembersBottomSheet(
           ],
         );
       });
-  // showMenu<String>(
-  //   shape: RoundedRectangleBorder(
-  //     side: BorderSide(color: Colors.black),
-  //     borderRadius: BorderRadius.circular(10),
-  //   ),
-  //   context: context!,
-  //   position: RelativeRect.fromDirectional(
-  //     textDirection: TextDirection.ltr,
-  //     start: 0,
-  //     top: (Get.size.height),
-  //     end: 0,
-  //     bottom: 10,
-  //   ),
-  //   items: [],
-  //   elevation: 8.0,
-  // );
 }
 
 Color statusColor(String status) {
   status = status.toLowerCase();
   switch (status) {
     case 'approved':
-      return Colors.green;
+      return Colors.green.shade300;
     case 'processing':
       return Colors.yellow;
     default:
   }
-  return Colors.grey;
+  return Colors.red.shade300;
+}
+
+Widget statusChip({String label = '', String? color}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+    decoration: BoxDecoration(
+      color: statusColor(color!),
+      borderRadius: BorderRadius.circular(50),
+    ),
+    child: Text(label),
+  );
 }
 
 Future<DateTimeRange?> dateTimeRangePicker(BuildContext context) async {

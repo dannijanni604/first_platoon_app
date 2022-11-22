@@ -1,8 +1,8 @@
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_platoon/core/components/app_tile.dart';
 import 'package:first_platoon/core/const.dart';
 import 'package:first_platoon/core/db.dart';
+import 'package:first_platoon/core/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -14,12 +14,13 @@ class UserHitListHistoryView extends StatelessWidget {
     final id = GetStorage().read('id');
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: DB.tasks
+          // .orderBy('date', descending: true)
           .where('members', arrayContains: id)
-          .where('status', isNull: false)
+          .where('status', isNotEqualTo: null)
           .snapshots(),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
-          snapshot.data!.docs.isEmpty
+          return snapshot.data!.docs.isEmpty
               ? const Center(
                   child: Text("No History"),
                 )
@@ -32,22 +33,14 @@ class UserHitListHistoryView extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(snapshot.data!.docs[index].data()['task']),
+                              Text(snapshot.data!.docs[index].data()['task'],
+                                  style: Const.labelText()),
                               Text(DateTime.now().toString().substring(0, 10)),
-                              // Text(snapshot.data!.docs[index]
-                              //         .data()['submitted_at']
-                              //         .toDate()
-                              //         .toString() ??
-                              //     ""),
-                            ],
-                          ),
-                          SizedBox(height: 5),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Status :", style: Const.labelText()),
-                              Text(
-                                '${snapshot.data!.docs[index].data()['status']}',
+                              statusChip(
+                                label:
+                                    snapshot.data!.docs[index].data()['status'],
+                                color:
+                                    snapshot.data!.docs[index].data()['status'],
                               ),
                             ],
                           ),
@@ -55,8 +48,7 @@ class UserHitListHistoryView extends StatelessWidget {
                       ),
                     );
                   });
-        }
-        if (snapshot.hasError) {
+        } else if (snapshot.hasError) {
           return Center(child: Text(snapshot.error.toString()));
         } else {
           return const Center(

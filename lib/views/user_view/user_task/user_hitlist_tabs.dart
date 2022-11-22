@@ -1,6 +1,6 @@
 import 'package:first_platoon/core/theme.dart';
-import 'package:first_platoon/views/user_view/user_hitlist/user_hitlist_history_view.dart';
-import 'package:first_platoon/views/user_view/user_hitlist/user_hitlist_task_view.dart';
+import 'package:first_platoon/views/user_view/user_task/user_hitlist_history_view.dart';
+import 'package:first_platoon/views/user_view/user_task/user_hitlist_task_view.dart';
 import 'package:flutter/material.dart';
 
 class UserHitlistView extends StatelessWidget {
@@ -19,7 +19,7 @@ class UserHitlistView extends StatelessWidget {
           title: const TabBar(
             tabs: [
               Tab(
-                text: "Hitlist Task",
+                text: "Task",
               ),
               Tab(
                 text: "Task History",

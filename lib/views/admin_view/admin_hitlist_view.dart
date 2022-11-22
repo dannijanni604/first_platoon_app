@@ -16,7 +16,7 @@ class AdminHitlistView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("HitList"),
+        title: const Text("Task"),
       ),
       body: StreamBuilder(
         stream: DB.tasks

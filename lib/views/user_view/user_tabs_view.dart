@@ -1,5 +1,5 @@
 import 'package:first_platoon/core/functions.dart';
-import 'package:first_platoon/views/user_view/user_hitlist/user_hitlist_tabs.dart';
+import 'package:first_platoon/views/user_view/user_task/user_hitlist_tabs.dart';
 import 'package:first_platoon/views/user_view/user_schedule_view.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +35,7 @@ class _UserHomeViewState extends State<UserHomeView> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.arrow_circle_up_rounded), label: "Schedule"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.arrow_circle_up_rounded), label: "Hitlist"),
+                icon: Icon(Icons.arrow_circle_up_rounded), label: "Task"),
           ],
         ),
       ),

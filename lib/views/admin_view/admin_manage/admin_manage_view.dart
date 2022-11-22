@@ -18,6 +18,7 @@ class AdminManageTaskView extends StatelessWidget {
     final ctrl = Get.put(ManageController());
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: DB.tasks
+            // .orderBy('date', descending: true)
             .where('status', isEqualTo: "processing")
             .where('doc_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .snapshots(),
@@ -40,7 +41,8 @@ class AdminManageTaskView extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(snapshot.data!.docs[index].data()['task']),
+                                Text(snapshot.data!.docs[index].data()['task'],
+                                    style: Const.labelText()),
                                 Text(snapshot.data!.docs[index]
                                     .data()['submitted_at']
                                     .toDate()
@@ -166,9 +168,9 @@ Future showDialogToCompleteTask(
                           'status': null,
                         });
                         Get.back();
-                        kerrorSnackbar(message: "DisApproved Task");
+                        kerrorSnackbar(message: "Disapproved task");
                       },
-                      label: "DisApprove",
+                      label: "Disapprove",
                       color: Colors.red.shade400)
                 ],
               ),
