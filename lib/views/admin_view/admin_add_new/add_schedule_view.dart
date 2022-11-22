@@ -128,10 +128,7 @@ class AddScheduleView extends StatelessWidget {
                       child: Text("No User"),
                     );
                   },
-                  onEmpty: const Center(
-                    child: Text("Search by typing"),
-                  ),
-                  onLoading: Center(child: CircularProgressIndicator()),
+                  onLoading: const Center(child: CircularProgressIndicator()),
                 ),
               ),
               Obx(() {

@@ -23,13 +23,6 @@ class AdminScheduleView extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: const Text("Schedule"),
         actions: [
-          IconButton(
-            onPressed: () {
-              authCtrl.signOut(context);
-              appNavReplace(context, const AuthOptionsView());
-            },
-            icon: const Icon(Icons.logout_outlined),
-          ),
           TextButton(
             onPressed: () async {
               // to put auth id
@@ -52,27 +45,26 @@ class AdminScheduleView extends StatelessWidget {
 
               // check AddCompaignsConteroller.addTask/addSchdule
             },
-            child: Text("Join Gruop"),
-          )
-          // PopupMenuButton(onSelected: ((value) async {
-          //   appNavPush(context, AdminCreateOrJoinGroupView(type: value));
-          // }), itemBuilder: (context) {
-          //   return const [
-          //     PopupMenuItem(
-          //       value: "join",
-          //       child: Text("Join Group"),
-          //     ),
-          //     PopupMenuItem(
-          //       value: "create",
-          //       child: Text("Create Group"),
-          //     ),
-          //   ];
-          // }),
+            child: Text(
+              "Join Group",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              authCtrl.signOut(context);
+              appNavReplace(context, const AuthOptionsView());
+            },
+            icon: const Icon(
+              Icons.logout_outlined,
+              size: 25,
+            ),
+          ),
         ],
       ),
       body: StreamBuilder(
         stream: DB.schedules
-            .where('auth_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where('doc_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {

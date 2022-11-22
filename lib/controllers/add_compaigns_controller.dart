@@ -58,7 +58,10 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
     try {
       await DB.schedules.doc().set(
         {
-          'auth_id': FirebaseAuth.instance.currentUser!.uid,
+          // on admin task/schdule screen we feth these items where doc_id is equal to auth_id
+          // crete new logic to access task/schdue items (to save these group ids) in wich group admin exist
+
+          'doc_id': FirebaseAuth.instance.currentUser!.uid,
           'schdule': scheduleTaskController.text,
           'date': scheduledDateTime.toString(),
           'members': FieldValue.arrayUnion(
@@ -87,6 +90,8 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
         try {
           await DB.tasks.doc().set(
             {
+              // on admin task/schdule screen we feth these items where doc_id is equal to auth_id
+              // crete new logic to access task/schdue items (to save these group ids) in wich group admin exist
               'doc_id': FirebaseAuth.instance.currentUser!.uid,
               'task': taskTaskController.text,
               'submitted_by': "",
@@ -163,7 +168,6 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
         timeHandle?.cancel();
       }
       timeHandle = Timer(const Duration(milliseconds: 700), () async {
-        members.clear();
         members.clear();
         change(members, status: RxStatus.loading());
         QuerySnapshot<Map<String, dynamic>> doc = await DB.members
