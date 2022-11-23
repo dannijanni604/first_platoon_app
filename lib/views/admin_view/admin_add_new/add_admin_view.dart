@@ -21,7 +21,7 @@ class AdminAddNew extends StatelessWidget {
             Tab(text: "Add Member"),
           ]),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             AddScheduleView(),
             AddTasksView(),

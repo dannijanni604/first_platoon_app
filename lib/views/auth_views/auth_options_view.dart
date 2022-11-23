@@ -38,8 +38,8 @@ class AuthOptionsView extends StatelessWidget {
               SizedBox(
                 width: Get.size.width / 1.05,
                 child: kAppButton(
-                  padding:
-                      EdgeInsets.only(left: 30, top: 2, bottom: 2, right: 2),
+                  padding: const EdgeInsets.only(
+                      left: 30, top: 2, bottom: 2, right: 2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -53,7 +53,7 @@ class AuthOptionsView extends StatelessWidget {
                       ),
                       kAppButton(
                         onPressed: () {
-                          appNavReplace(context, const AdminLoginView());
+                          appNavPush(context, const AdminLoginView());
                         },
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 5),

@@ -23,6 +23,7 @@ class AuthController extends GetxController {
   final adminNameController = TextEditingController();
   final adminEmailController = TextEditingController();
   final adminPasswordController = TextEditingController();
+  final groupIdController = TextEditingController();
 
   // user var
 
@@ -44,7 +45,7 @@ class AuthController extends GetxController {
         adminNameController.clear();
         adminEmailController.clear();
         adminPasswordController.clear();
-        appNavReplace(context, const AdminHomeView());
+        Get.off(() => const AdminHomeView());
       });
     } on FirebaseAuthException catch (e) {
       onLogin(false);
@@ -59,23 +60,43 @@ class AuthController extends GetxController {
   Future signUp(BuildContext context) async {
     try {
       onLogin(true);
-      await auth
-          .createUserWithEmailAndPassword(
+      if (groupIdController.text.isNotEmpty) {
+        var doc = await DB.groups.doc(groupIdController.text).get();
+        if (!doc.exists) {
+          kerrorSnackbar(message: "Group is not exists");
+          onLogin(false);
+          return;
+        }
+      }
+      var credential = await auth.createUserWithEmailAndPassword(
         email: adminEmailController.text,
         password: adminPasswordController.text,
-      )
-          .then((UserCredential credential) {
-        final uid = credential.user!.uid;
-        DB.admins.doc(uid).set({
-          "name": adminNameController.text,
-          "email": adminEmailController.text,
-          "uid": uid,
-        });
-        onLogin(false);
-        appNavReplace(context, const AdminHomeView());
-        adminNameController.clear();
-        adminEmailController.clear();
+      );
+      final uid = credential.user!.uid;
+      await DB.admins.doc(uid).set({
+        "name": adminNameController.text,
+        "email": adminEmailController.text,
+        "uid": uid,
+        "group_id":
+            groupIdController.text.isEmpty ? "" : groupIdController.text,
       });
+      if (groupIdController.text.isNotEmpty) {
+        await DB.groups.doc(groupIdController.text).update({
+          'admin_ids': FieldValue.arrayUnion([uid]),
+        });
+      } else {
+        await DB.groups.doc().set({
+          'admin_ids': FieldValue.arrayUnion([uid]),
+        });
+        var docs = await DB.groups.where('admin_ids', arrayContains: uid).get();
+        if (docs.docs.isNotEmpty) {
+          await DB.admins.doc(uid).update({'group_id': docs.docs.first.id});
+        }
+      }
+      onLogin(false);
+      adminNameController.clear();
+      adminEmailController.clear();
+      Get.offAll(() => const AdminHomeView());
     } on FirebaseAuthException catch (e) {
       onLogin(false);
       return kerrorSnackbar(message: e.toString());

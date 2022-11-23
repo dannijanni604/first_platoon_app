@@ -1,3 +1,4 @@
+import 'package:first_platoon/controllers/admin_controller.dart';
 import 'package:first_platoon/controllers/schedule_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/functions.dart';
@@ -19,43 +20,57 @@ class AdminHomeView extends StatefulWidget {
 class _AdminHomeViewState extends State<AdminHomeView> {
   int pageIndex = 0;
   final ctrl = Get.put(ScheduleController());
+  final adminCtrl = Get.put(AdminController());
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: onWillPop,
-      child: Scaffold(
-        body: IndexedStack(
-          index: pageIndex,
-          children: const [
-            AdminScheduleView(),
-            AdminHitlistView(),
-            AdminManageTabsView(),
-          ],
+      child: adminCtrl.obx(
+        (state) => Scaffold(
+          body: IndexedStack(
+            index: pageIndex,
+            children: [
+              AdminScheduleView(),
+              AdminHitlistView(),
+              AdminManageTabsView(),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            onTap: (int newIndex) {
+              setState(() {
+                pageIndex = newIndex;
+              });
+            },
+            currentIndex: pageIndex,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.arrow_circle_up_rounded),
+                label: "Schedule",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.arrow_circle_up_rounded),
+                label: "Task",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.arrow_circle_up_rounded),
+                label: "Manage",
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: AppTheme.primaryColor,
+            onPressed: () async {
+              appNavPush(context, const AdminAddNew());
+            },
+            child: const Icon(
+              Icons.add,
+            ),
+          ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: (int newIndex) {
-            setState(() {
-              pageIndex = newIndex;
-            });
-          },
-          currentIndex: pageIndex,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.arrow_circle_up_rounded), label: "Schedule"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.arrow_circle_up_rounded), label: "Task"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.arrow_circle_up_rounded), label: "Manage"),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: AppTheme.primaryColor,
-          onPressed: () async {
-            appNavPush(context, const AdminAddNew());
-          },
-          child: const Icon(
-            Icons.add,
+        onLoading: const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
           ),
         ),
       ),

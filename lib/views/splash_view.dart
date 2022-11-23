@@ -18,6 +18,7 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
+    super.initState();
     Future.delayed(const Duration(seconds: 2), () {
       final user = GetStorage().read('code');
       if (user != null) {
@@ -28,9 +29,6 @@ class _SplashViewState extends State<SplashView> {
         Get.off(() => const AuthOptionsView());
       }
     });
-    // Future.delayed(
-    //     Duration(seconds: 3), () => appNavReplace(context, AuthOptionsView()));
-    super.initState();
   }
 
   Widget build(BuildContext context) {

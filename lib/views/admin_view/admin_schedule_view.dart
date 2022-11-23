@@ -1,23 +1,25 @@
-import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:first_platoon/controllers/add_compaigns_controller.dart';
 import 'package:first_platoon/controllers/auth_controller.dart';
 import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/components/app_tile.dart';
+import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:first_platoon/core/const.dart';
 import 'package:first_platoon/core/db.dart';
 import 'package:first_platoon/views/auth_views/auth_options_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+
+import '../../controllers/admin_controller.dart';
 
 class AdminScheduleView extends StatelessWidget {
-  const AdminScheduleView({super.key});
+  AdminScheduleView({super.key});
 
+  final authCtrl = Get.put(AuthController());
+  final adminCtrl = Get.find<AdminController>();
   @override
   Widget build(BuildContext context) {
-    final authCtrl = Get.put(AuthController());
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -25,35 +27,70 @@ class AdminScheduleView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              // to put auth id
-              DB.groups.doc().set({
-                "admin_ids": FieldValue.arrayUnion(
-                  [FirebaseAuth.instance.currentUser!.uid],
+              showDialog(
+                context: context,
+                useSafeArea: true,
+                builder: (context) => Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        QrImage(
+                          data: adminCtrl.admin.groupId,
+                          version: QrVersions.auto,
+                          size: 180,
+                          gapless: false,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(adminCtrl.admin.groupId),
+                            IconButton(
+                              onPressed: () async {
+                                await Clipboard.setData(
+                                  ClipboardData(text: adminCtrl.admin.groupId),
+                                );
+                                ksucessSnackbar(message: "Group Id Copied");
+                              },
+                              icon: const Icon(Icons.copy),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              });
+              );
+              // // to put auth id
+              // DB.groups.doc().set({
+              //   "admin_ids": FieldValue.arrayUnion(
+              //     [FirebaseAuth.instance.currentUser!.uid],
+              //   ),
+              // });
 
               // to get group id where admin exist
-              QuerySnapshot<Map<String, dynamic>> doc = await DB.groups
-                  .where("admin_ids",
-                      isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                  .get();
-              doc.docs.map((e) {
-                GetStorage().write('group_id', e.id);
-              });
+              // QuerySnapshot<Map<String, dynamic>> doc = await DB.groups
+              //     .where("admin_ids",
+              //         isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              //     .get();
+              // doc.docs.map((e) {
+              //   GetStorage().write('group_id', e.id);
+              // });
 
               // now when the admin create schdule and task
 
               // check AddCompaignsConteroller.addTask/addSchdule
             },
-            child: Text(
-              "Join Group",
+            child: const Text(
+              "Share Group",
               style: TextStyle(color: Colors.white),
             ),
           ),
           IconButton(
             onPressed: () {
               authCtrl.signOut(context);
-              appNavReplace(context, const AuthOptionsView());
+              Get.offAll(() => const AuthOptionsView());
             },
             icon: const Icon(
               Icons.logout_outlined,
@@ -64,7 +101,7 @@ class AdminScheduleView extends StatelessWidget {
       ),
       body: StreamBuilder(
         stream: DB.schedules
-            .where('doc_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where('doc_id', isEqualTo: adminCtrl.admin.groupId)
             .snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {

@@ -16,6 +16,7 @@ class AdminLoginView extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
     final ctrl = Get.put(AuthController());
     return Scaffold(
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -24,15 +25,15 @@ class AdminLoginView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                IconButton(
-                  onPressed: () {
-                    appNavReplace(context, AuthOptionsView());
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 25,
-                  ),
-                ),
+                // IconButton(
+                //   onPressed: () {
+                //     appNavReplace(context, AuthOptionsView());
+                //   },
+                //   icon: const Icon(
+                //     Icons.arrow_back_ios_new,
+                //     size: 25,
+                //   ),
+                // ),
                 SizedBox(height: Get.size.height * 0.03),
                 Text("Welcome To First Platoon", style: Const.labelText()),
                 SizedBox(height: Get.size.height * 0.03),

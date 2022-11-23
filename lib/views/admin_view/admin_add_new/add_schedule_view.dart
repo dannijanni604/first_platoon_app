@@ -6,15 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddScheduleView extends StatelessWidget {
-  const AddScheduleView({super.key});
+  AddScheduleView({super.key});
+
+  final ctrl = Get.put(AddCompaignsConteroller());
+
+  final _key = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    ctrl.change(null, status: RxStatus.success());
     final size = Get.size;
-    final ctrl = Get.put(AddCompaignsConteroller());
-
-    final _key = GlobalKey<FormState>();
-    // final sctrl = Get.put(ScheduleController());
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -45,9 +46,12 @@ class AddScheduleView extends StatelessWidget {
               TextFormField(
                 controller: ctrl.scheduledateController,
                 onTap: () async {
-                  ctrl.scheduledDateTime = await dateTimeRangePicker(context);
-                  ctrl.scheduledateController.text =
-                      ctrl.scheduledDateTime.toString();
+                  DateTimeRange? range = await dateTimeRangePicker(context);
+                  if (range != null) {
+                    ctrl.scheduledDateTime = range;
+                    ctrl.scheduledateController.text =
+                        ctrl.scheduledDateTime.toString();
+                  }
                 },
                 decoration: const InputDecoration(
                   suffixIcon: Icon(Icons.calendar_today),
@@ -99,8 +103,6 @@ class AddScheduleView extends StatelessWidget {
               ),
               Container(
                 height: 200,
-                // margin: EdgeInsets.symmetric(vertical: 10),
-                // padding: EdgeInsets.all(10),
                 child: ctrl.obx(
                   (state) {
                     if (ctrl.members.isNotEmpty) {
@@ -112,7 +114,11 @@ class AddScheduleView extends StatelessWidget {
                           ...ctrl.members.map((e) {
                             return Chip(
                               onDeleted: () {
-                                ctrl.scheduleMembers.add(e);
+                                bool already = ctrl.scheduleMembers
+                                    .any((m) => m['id'] == e['id']);
+                                if (!already) {
+                                  ctrl.scheduleMembers.add(e);
+                                }
                               },
                               deleteIcon: Icon(Icons.add, size: 20),
                               padding: EdgeInsets.all(1),

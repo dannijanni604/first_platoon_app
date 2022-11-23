@@ -11,23 +11,24 @@ class AdminManageTabsView extends StatelessWidget {
       length: 2,
       initialIndex: 0,
       child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: const TabBar(tabs: [
-              Tab(
-                text: "Manage Task",
-              ),
-              Tab(
-                text: "Task History",
-              ),
-            ]),
-          ),
-          body: const TabBarView(
-            children: [
-              AdminManageTaskView(),
-              AdminManageHistoryView(),
-            ],
-          )),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const TabBar(tabs: [
+            Tab(
+              text: "Manage Task",
+            ),
+            Tab(
+              text: "Task History",
+            ),
+          ]),
+        ),
+        body: const TabBarView(
+          children: [
+            AdminManageTaskView(),
+            AdminManageHistoryView(),
+          ],
+        ),
+      ),
     );
   }
 }

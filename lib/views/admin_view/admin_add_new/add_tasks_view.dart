@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddTasksView extends StatelessWidget {
-  const AddTasksView({super.key});
+  AddTasksView({super.key});
 
+  final ctrl = Get.put(AddCompaignsConteroller());
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(AddCompaignsConteroller());
     final size = Get.size;
     return SingleChildScrollView(
       child: Padding(
@@ -76,8 +76,6 @@ class AddTasksView extends StatelessWidget {
                           (e) => Chip(
                             onDeleted: () {
                               ctrl.taskMembers.remove(e);
-                              // ctrl.taskMembers.value =
-                              //     ctrl.taskMembers.toSet().toList();
                             },
                             label: Text(e['name']),
                           ),
@@ -112,7 +110,11 @@ class AddTasksView extends StatelessWidget {
                           ...ctrl.members.map((e) {
                             return Chip(
                               onDeleted: () {
-                                ctrl.taskMembers.add(e);
+                                bool already = ctrl.taskMembers
+                                    .any((m) => m['id'] == e['id']);
+                                if (!already) {
+                                  ctrl.taskMembers.add(e);
+                                }
                               },
                               deleteIcon: Icon(Icons.add, size: 20),
                               padding: EdgeInsets.all(1),

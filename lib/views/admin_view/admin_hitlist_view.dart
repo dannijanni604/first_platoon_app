@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_platoon/controllers/admin_controller.dart';
 import 'package:first_platoon/controllers/hitlist_controller.dart';
 import 'package:first_platoon/core/components/app_tile.dart';
 import 'package:first_platoon/core/const.dart';
@@ -8,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AdminHitlistView extends StatelessWidget {
-  const AdminHitlistView({super.key});
+  AdminHitlistView({super.key});
+
+  final adminCtrl = Get.find<AdminController>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class AdminHitlistView extends StatelessWidget {
       ),
       body: StreamBuilder(
         stream: DB.tasks
-            .where('doc_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where('doc_id', isEqualTo: adminCtrl.admin.groupId)
             .where('status', isNull: true)
             .snapshots(),
         builder: ((context, snapshot) {
