@@ -22,7 +22,7 @@ class AdminManageTabsView extends StatelessWidget {
             ),
           ]),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             AdminManageTaskView(),
             AdminManageHistoryView(),

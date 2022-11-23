@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_platoon/controllers/admin_controller.dart';
@@ -7,10 +6,14 @@ import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:first_platoon/core/db.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AddCompaignsConteroller extends GetxController with StateMixin {
+  @override
+  void onInit() {
+    change(null, status: RxStatus.success());
+    super.onInit();
+  }
+
   RxBool indicator = false.obs;
   RxList<Map<String, dynamic>> members = RxList<Map<String, dynamic>>([]);
   RxList<Map<String, dynamic>> scheduleMembers =
@@ -24,7 +27,6 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
   DateTimeRange? scheduledDateTime;
   final scheduleMemberController = TextEditingController();
   final scheduleformkey = GlobalKey<FormState>();
-  // get scheduleformkey => _scheduleformkey;
 
   // Task
   final taskTaskController = TextEditingController();
@@ -34,17 +36,14 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
   get taskformkey => _taskformkey;
 
   // Add Member
-
   final memberNameController = TextEditingController();
   final genetrateCodeController = TextEditingController();
   final _memberformkey = GlobalKey<FormState>();
   get memberformkey => _memberformkey;
 
-// groups
-
+// Groups
   final groupMemberController = TextEditingController();
   final groupNameController = TextEditingController();
-
   String? groupId;
 
   List<String> adminJoinedGroupsIds = [];
@@ -54,9 +53,6 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
     try {
       await DB.schedules.doc().set(
         {
-          // on admin task/schdule screen we feth these items where doc_id is equal to auth_id
-          // crete new logic to access task/schdue items (to save these group ids) in wich group admin exist
-
           'doc_id': AdminController.to.admin.groupId,
           'schdule': scheduleTaskController.text,
           'date': scheduledDateTime.toString(),
@@ -82,12 +78,9 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
     if (_taskformkey.currentState!.validate()) {
       if (taskMembers.isNotEmpty) {
         indicator(true);
-        // String groupId = GetStorage().read('group_id');
         try {
           await DB.tasks.doc().set(
             {
-              // on admin task/schdule screen we feth these items where doc_id is equal to auth_id
-              // crete new logic to access task/schdue items (to save these group ids) in wich group admin exist
               'doc_id': AdminController.to.admin.groupId,
               'task': taskTaskController.text,
               'submitted_by': "",

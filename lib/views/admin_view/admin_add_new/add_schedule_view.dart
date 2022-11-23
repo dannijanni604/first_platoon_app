@@ -14,7 +14,7 @@ class AddScheduleView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ctrl.change(null, status: RxStatus.success());
+    // ctrl.change(null, status: RxStatus.success());
     final size = Get.size;
     return SingleChildScrollView(
       child: Padding(

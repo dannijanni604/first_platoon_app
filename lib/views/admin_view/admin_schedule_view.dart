@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_platoon/controllers/auth_controller.dart';
-import 'package:first_platoon/core/app_navigator.dart';
 import 'package:first_platoon/core/components/app_tile.dart';
 import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:first_platoon/core/const.dart';
@@ -62,25 +60,6 @@ class AdminScheduleView extends StatelessWidget {
                   ),
                 ),
               );
-              // // to put auth id
-              // DB.groups.doc().set({
-              //   "admin_ids": FieldValue.arrayUnion(
-              //     [FirebaseAuth.instance.currentUser!.uid],
-              //   ),
-              // });
-
-              // to get group id where admin exist
-              // QuerySnapshot<Map<String, dynamic>> doc = await DB.groups
-              //     .where("admin_ids",
-              //         isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-              //     .get();
-              // doc.docs.map((e) {
-              //   GetStorage().write('group_id', e.id);
-              // });
-
-              // now when the admin create schdule and task
-
-              // check AddCompaignsConteroller.addTask/addSchdule
             },
             child: const Text(
               "Share Group",

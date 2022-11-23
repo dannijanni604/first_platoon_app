@@ -84,27 +84,6 @@ class AdminSignUpView extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.back();
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 20),
-                              child: Text(
-                                "Go Back",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       SizedBox(height: Get.size.height * 0.08),
                       Center(
                         child: Obx(() {

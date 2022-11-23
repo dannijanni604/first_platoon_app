@@ -3,7 +3,6 @@ import 'package:first_platoon/core/components/snackbar.dart';
 import 'package:first_platoon/core/db.dart';
 import 'package:first_platoon/models/admin.dart';
 import 'package:first_platoon/views/auth_views/auth_options_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class AdminController extends GetxController with StateMixin {

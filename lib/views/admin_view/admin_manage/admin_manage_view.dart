@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_platoon/controllers/admin_controller.dart';
 import 'package:first_platoon/controllers/manage_controller.dart';
 import 'package:first_platoon/core/components/app_button.dart';
 import 'package:first_platoon/core/components/app_tile.dart';
@@ -11,16 +12,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AdminManageTaskView extends StatelessWidget {
-  const AdminManageTaskView({super.key});
+  AdminManageTaskView({super.key});
+  final adminCtrl = Get.find<AdminController>();
+  final ctrl = Get.put(ManageController());
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(ManageController());
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: DB.tasks
-            // .orderBy('date', descending: true)
             .where('status', isEqualTo: "processing")
-            .where('doc_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where('doc_id', isEqualTo: adminCtrl.admin.groupId)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
