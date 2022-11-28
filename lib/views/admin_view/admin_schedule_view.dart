@@ -23,7 +23,7 @@ class AdminScheduleView extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: const Text("Schedule"),
         actions: [
-          TextButton(
+          IconButton(
             onPressed: () async {
               showDialog(
                 context: context,
@@ -61,10 +61,7 @@ class AdminScheduleView extends StatelessWidget {
                 ),
               );
             },
-            child: const Text(
-              "Share Group",
-              style: TextStyle(color: Colors.white),
-            ),
+            icon: const Icon(Icons.supervised_user_circle),
           ),
           IconButton(
             onPressed: () {

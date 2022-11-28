@@ -33,21 +33,22 @@ class _SplashViewState extends State<SplashView> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "F I R S T \n P L A T O O N",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline5!.copyWith(
-                    color: AppTheme.kprimaryColor,
-                  ),
-            ),
-            SizedBox(height: Get.size.height * 0.05),
+            // Text(
+            //   "F I R S T \n P L A T O O N",
+            //   textAlign: TextAlign.center,
+            //   style: Theme.of(context).textTheme.headline5!.copyWith(
+            //         color: AppTheme.kprimaryColor,
+            //       ),
+            // ),
+            // SizedBox(height: Get.size.height * 0.05),
             Image.asset(
               "assets/images/platoon.png",
-              scale: 3,
+              scale: 2,
             ),
           ],
         ),
