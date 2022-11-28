@@ -78,7 +78,7 @@ class AdminLoginView extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                   vertical: 20, horizontal: 20),
                               child: Text(
-                                "Forget Password",
+                                "Forgot Password?",
                                 style: TextStyle(
                                   color: Colors.blue,
                                   decoration: TextDecoration.underline,
