@@ -108,7 +108,7 @@ class AuthController extends GetxController {
       onLogin(true);
       await auth.sendPasswordResetEmail(email: email);
       kerrorSnackbar(
-        message: "Request Will Be Send Check You MailBox To Reset Password",
+        message: "Reset password email sent, Please check your mail",
       );
       onLogin(false);
     } on FirebaseAuthException catch (e) {

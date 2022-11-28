@@ -67,25 +67,25 @@ class AdminLoginView extends StatelessWidget {
                         },
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     appNavPush(
-                          //         context, const AdminForgetPasswordView());
-                          //   },
-                          //   child: const Padding(
-                          //     padding: EdgeInsets.symmetric(
-                          //         vertical: 20, horizontal: 20),
-                          //     child: Text(
-                          //       "Forget Password",
-                          //       style: TextStyle(
-                          //         color: Colors.blue,
-                          //         decoration: TextDecoration.underline,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
+                          GestureDetector(
+                            onTap: () {
+                              appNavPush(
+                                  context, const AdminForgetPasswordView());
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 20),
+                              child: Text(
+                                "Forget Password",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ),
                           GestureDetector(
                             onTap: () {
                               appNavPush(context, const AdminSignUpView());
