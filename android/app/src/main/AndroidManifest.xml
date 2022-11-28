@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.first_platoon">
-    
+     <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="First Platoon"
         android:name="${applicationName}"

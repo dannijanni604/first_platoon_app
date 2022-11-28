@@ -20,16 +20,16 @@ class AuthOptionsView extends StatelessWidget {
               vertical: Get.size.height * 0.1,
               horizontal: Get.size.width * 0.05),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "First Platoon",
-                style: Theme.of(context).textTheme.headline3!.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w100,
-                    ),
-              ),
-              SizedBox(height: Get.size.height * 0.05),
+              // Text(
+              //   "First Platoon",
+              //   style: Theme.of(context).textTheme.headline3!.copyWith(
+              //         color: Colors.black,
+              //         fontWeight: FontWeight.w100,
+              //       ),
+              // ),
+              // SizedBox(height: Get.size.height * 0.05),
               Image.asset(
                 'assets/images/platoon.png',
                 scale: 2.5,
