@@ -35,7 +35,11 @@ class AdminManageTaskView extends StatelessWidget {
                       return appTile(
                         onpress: () {
                           showDialogToCompleteTask(
-                              context, index, ctrl, snapshot);
+                            context,
+                            index,
+                            ctrl,
+                            snapshot,
+                          );
                         },
                         child: Column(
                           children: [

@@ -44,7 +44,7 @@ class AuthOptionsView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        "Login as admin",
+                        "Login as Admin",
                         style: TextStyle(
                           // color: Colors.white,
                           fontSize: 18,
@@ -81,7 +81,7 @@ class AuthOptionsView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        "Login as user",
+                        "Login as User",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

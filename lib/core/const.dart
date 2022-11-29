@@ -18,7 +18,7 @@ class Const {
       return 'Please enter password';
     } else {
       if (!regex.hasMatch(value)) {
-        return 'Code must contain 1 spacial, capital latter, numbers and 8 length';
+        return 'Code must contain 1 spacial, capital latter, numbers and eight characters in length';
       } else {
         return null;
       }

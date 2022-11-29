@@ -36,6 +36,7 @@ class AddMemberView extends StatelessWidget {
               SizedBox(height: size.height * 0.01),
               TextFormField(
                 controller: ctrl.genetrateCodeController,
+                decoration: InputDecoration(errorMaxLines: 2),
                 validator: (val) {
                   return Const.validateCode(val!);
                 },

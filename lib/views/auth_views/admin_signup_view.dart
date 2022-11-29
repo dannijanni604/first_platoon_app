@@ -56,11 +56,14 @@ class AdminSignUpView extends StatelessWidget {
                         },
                       ),
                       SizedBox(height: Get.size.height * 0.03),
-                      const Text("Pasword"),
+                      const Text("Password"),
                       SizedBox(height: Get.size.height * 0.01),
                       TextFormField(
                         controller: ctrl.adminPasswordController,
                         obscureText: true,
+                        decoration: InputDecoration(
+                          errorMaxLines: 2,
+                        ),
                         validator: (val) {
                           return Const.validateCode(val!);
                         },

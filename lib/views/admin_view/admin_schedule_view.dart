@@ -112,10 +112,52 @@ class AdminScheduleView extends StatelessWidget {
                                   style: Theme.of(context).textTheme.button),
                             ),
                             Text("$endDate"),
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => Dialog(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text("Are you sure to delete?"),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              TextButton(
+                                                onPressed: () async {
+                                                  await DB.schedules
+                                                      .doc(snapshot
+                                                          .data!.docs[index].id)
+                                                      .delete();
+                                                  Get.back();
+                                                },
+                                                child: Text('Delete'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Get.back();
+                                                },
+                                                child: Text('Cancel'),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: const Icon(Icons.delete),
+                            )
                           ],
                         ),
                       );
-                    }));
+                    }),
+                  );
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
