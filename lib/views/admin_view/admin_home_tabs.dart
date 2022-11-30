@@ -61,7 +61,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
           floatingActionButton: FloatingActionButton(
             backgroundColor: AppTheme.primaryColor,
             onPressed: () async {
-              appNavPush(context, const AdminAddNew());
+              appNavPush(context, AdminAddNew());
             },
             child: const Icon(
               Icons.add,

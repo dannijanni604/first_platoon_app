@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class AddTasksView extends StatelessWidget {
   AddTasksView({super.key});
 
-  final ctrl = Get.put(AddCompaignsConteroller());
+  final ctrl = Get.find<AddCompaignsConteroller>();
   @override
   Widget build(BuildContext context) {
     final size = Get.size;

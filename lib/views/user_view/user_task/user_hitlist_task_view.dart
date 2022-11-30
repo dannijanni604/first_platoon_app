@@ -9,6 +9,7 @@ import 'package:first_platoon/core/db.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 class UserHitListTaskView extends StatelessWidget {
   const UserHitListTaskView({super.key});
@@ -47,8 +48,13 @@ class UserHitListTaskView extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(snapshot.data!.docs[index]
-                                  .data()['due_date']),
+                              Text(
+                                DateFormat('MMM d').format(
+                                  DateTime.parse(snapshot.data!.docs[index]
+                                          .data()['due_date'] +
+                                      "00:00:00"),
+                                ),
+                              ),
                             ],
                           ),
                           Text(snapshot.data!.docs[index].data()['task'],

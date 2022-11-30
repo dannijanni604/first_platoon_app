@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddMemberView extends StatelessWidget {
-  const AddMemberView({super.key});
+  AddMemberView({super.key});
 
+  final ctrl = Get.find<AddCompaignsConteroller>();
   @override
   Widget build(BuildContext context) {
     final size = Get.size;
-    final ctrl = Get.put(AddCompaignsConteroller());
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(10.0),

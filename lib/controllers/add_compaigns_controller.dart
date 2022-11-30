@@ -56,7 +56,8 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
         {
           'doc_id': AdminController.to.admin.groupId,
           'schdule': scheduleTaskController.text,
-          'date': scheduledDateTime.toString(),
+          'date': scheduledDateTime!.start,
+          'end_date': scheduledDateTime!.end,
           'members': FieldValue.arrayUnion(
               scheduleMembers.map((e) => e['id']).toList()),
         },
@@ -66,7 +67,6 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
       scheduleMemberController.clear();
       scheduleMembers.clear();
       scheduledateController.clear();
-      members.clear();
     } on Exception catch (e) {
       kerrorSnackbar(message: e.toString());
       indicator(false);
@@ -99,7 +99,6 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
           taskdueDateController.clear();
           taskMemberController.clear();
           taskMembers.clear();
-          members.clear();
         } on Exception catch (e) {
           kerrorSnackbar(message: e.toString());
           indicator(false);

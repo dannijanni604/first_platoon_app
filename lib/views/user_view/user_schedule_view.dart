@@ -6,6 +6,7 @@ import 'package:first_platoon/core/theme.dart';
 import 'package:first_platoon/views/auth_views/auth_options_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 class UserScheduleView extends StatelessWidget {
   const UserScheduleView({super.key});
@@ -33,19 +34,10 @@ class UserScheduleView extends StatelessWidget {
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             return snapshot.data!.docs.isEmpty
-                ? Center(child: Text("No Schdeule"))
+                ? const Center(child: Text("No Schdeule"))
                 : ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: ((context, index) {
-                      String initialDate = snapshot.data!.docs[index]
-                          .data()['date']
-                          .toString()
-                          .substring(0, 10);
-
-                      String endDate = snapshot.data!.docs[index]
-                          .data()['date']
-                          .toString()
-                          .substring(26, 36);
                       return appTile(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,14 +47,16 @@ class UserScheduleView extends StatelessWidget {
                                   snapshot.data!.docs[index].data()['schdule'],
                                   style: Const.labelText()),
                             ),
-                            Text("$initialDate"),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              child: Text(" - To - ",
-                                  style: Theme.of(context).textTheme.button),
+                            Text(
+                              dateString(
+                                snapshot.data!.docs[index]
+                                    .data()['date']
+                                    .toDate(),
+                                snapshot.data!.docs[index]
+                                    .data()['end_date']
+                                    .toDate(),
+                              ),
                             ),
-                            Text("$endDate"),
                           ],
                         ),
                       );
@@ -81,5 +75,12 @@ class UserScheduleView extends StatelessWidget {
         }),
       ),
     );
+  }
+
+  String dateString(DateTime st, DateTime en) {
+    if (st.month == en.month) {
+      return "${DateFormat('MMM d').format(st)}-${DateFormat('d').format(en)}";
+    }
+    return "${DateFormat('MMM d').format(st)}-${DateFormat('MMM d').format(en)}";
   }
 }

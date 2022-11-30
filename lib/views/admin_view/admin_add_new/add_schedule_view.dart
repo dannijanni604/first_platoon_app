@@ -8,9 +8,8 @@ import 'package:get/get.dart';
 class AddScheduleView extends StatelessWidget {
   AddScheduleView({super.key});
 
-  final ctrl = Get.put(AddCompaignsConteroller());
-
   final _key = GlobalKey<FormState>();
+  final ctrl = Get.find<AddCompaignsConteroller>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +23,13 @@ class AddScheduleView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Task"),
+              const Text("Schedule"),
               SizedBox(height: size.height * 0.01),
               TextFormField(
                 controller: ctrl.scheduleTaskController,
                 validator: (val) {
                   if (val == null || val.isEmpty) {
-                    return "Add Task";
+                    return "Add Schedule";
                   } else {
                     return null;
                   }
@@ -50,7 +49,7 @@ class AddScheduleView extends StatelessWidget {
                   if (range != null) {
                     ctrl.scheduledDateTime = range;
                     ctrl.scheduledateController.text =
-                        ctrl.scheduledDateTime.toString();
+                        "${range.start.toString().substring(0, 10)} - ${range.end.toString().substring(0, 10)}";
                   }
                 },
                 decoration: const InputDecoration(

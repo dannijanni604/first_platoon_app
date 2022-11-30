@@ -5,6 +5,7 @@ import 'package:first_platoon/core/db.dart';
 import 'package:first_platoon/core/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 class UserHitListHistoryView extends StatelessWidget {
   const UserHitListHistoryView({super.key});
@@ -35,12 +36,14 @@ class UserHitListHistoryView extends StatelessWidget {
                             children: [
                               Text(snapshot.data!.docs[index].data()['task'],
                                   style: Const.labelText()),
-                              Text(DateTime.now().toString().substring(0, 10)),
+                              Text(DateFormat("MMM d").format(DateTime.now())),
                               statusChip(
-                                label:
-                                    snapshot.data!.docs[index].data()['status'],
-                                color:
-                                    snapshot.data!.docs[index].data()['status'],
+                                label: snapshot.data!.docs[index]
+                                        .data()['status'] ??
+                                    '',
+                                color: snapshot.data!.docs[index]
+                                        .data()['status'] ??
+                                    '',
                               ),
                             ],
                           ),

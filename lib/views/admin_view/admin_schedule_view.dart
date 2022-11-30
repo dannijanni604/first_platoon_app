@@ -79,7 +79,7 @@ class AdminScheduleView extends StatelessWidget {
       body: StreamBuilder(
         stream: DB.schedules
             .where('doc_id', isEqualTo: adminCtrl.admin.groupId)
-            .orderBy('date', descending: true)
+            .orderBy('date')
             .snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
@@ -88,15 +88,6 @@ class AdminScheduleView extends StatelessWidget {
                 : ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: ((context, index) {
-                      String initialDate = snapshot.data!.docs[index]
-                          .data()['date']
-                          .toString()
-                          .substring(0, 10);
-
-                      String endDate = snapshot.data!.docs[index]
-                          .data()['date']
-                          .toString()
-                          .substring(26, 36);
                       return appTile(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,7 +101,10 @@ class AdminScheduleView extends StatelessWidget {
                               dateString(
                                 snapshot.data!.docs[index]
                                     .data()['date']
-                                    .toString(),
+                                    .toDate(),
+                                snapshot.data!.docs[index]
+                                    .data()['end_date']
+                                    .toDate(),
                               ),
                             ),
                             // Text("$initialDate"),
@@ -121,6 +115,7 @@ class AdminScheduleView extends StatelessWidget {
                             //       style: Theme.of(context).textTheme.button),
                             // ),
                             // Text("$endDate"),
+                            const SizedBox(width: 5),
                             GestureDetector(
                               onTap: () {
                                 showDialog(
@@ -160,7 +155,10 @@ class AdminScheduleView extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: const Icon(Icons.delete),
+                              child: const Icon(
+                                Icons.delete,
+                                size: 20,
+                              ),
                             )
                           ],
                         ),
@@ -168,6 +166,7 @@ class AdminScheduleView extends StatelessWidget {
                     }),
                   );
           } else if (snapshot.hasError) {
+            printInfo(info: snapshot.error.toString());
             return Center(
               child: Text(
                 snapshot.error.toString(),
@@ -183,9 +182,7 @@ class AdminScheduleView extends StatelessWidget {
     );
   }
 
-  String dateString(String date) {
-    DateTime st = DateTime.parse(date.substring(0, 10));
-    DateTime en = DateTime.parse(date.substring(26, 36));
+  String dateString(DateTime st, DateTime en) {
     if (st.month == en.month) {
       return "${DateFormat('MMM d').format(st)}-${DateFormat('d').format(en)}";
     }

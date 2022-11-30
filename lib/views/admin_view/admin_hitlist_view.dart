@@ -7,6 +7,7 @@ import 'package:first_platoon/core/db.dart';
 import 'package:first_platoon/core/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class AdminHitlistView extends StatelessWidget {
   AdminHitlistView({super.key});
@@ -25,6 +26,7 @@ class AdminHitlistView extends StatelessWidget {
         stream: DB.tasks
             .where('doc_id', isEqualTo: adminCtrl.admin.groupId)
             .where('status', isNull: true)
+            .orderBy('due_date')
             .snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
@@ -55,11 +57,13 @@ class AdminHitlistView extends StatelessWidget {
                               child: Text(task, style: Const.labelText()),
                             ),
                             Text(
-                              snapshot.data!.docs[index]
-                                  .data()['due_date']
-                                  .toString()
-                                  .substring(0, 11),
+                              DateFormat('MMM d').format(
+                                DateTime.parse(snapshot.data!.docs[index]
+                                        .data()['due_date'] +
+                                    "00:00:00"),
+                              ),
                             ),
+                            const SizedBox(width: 5),
                             GestureDetector(
                               onTap: () {
                                 showDialog(
@@ -99,12 +103,22 @@ class AdminHitlistView extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: const Icon(Icons.delete),
+                              child: const Icon(
+                                Icons.delete,
+                                size: 20,
+                              ),
                             )
                           ],
                         ),
                       );
                     });
+          } else if (snapshot.hasError) {
+            printInfo(info: snapshot.error.toString());
+            return Center(
+              child: Text(
+                snapshot.error.toString(),
+              ),
+            );
           } else {
             return const Center(
               child: CircularProgressIndicator(),
