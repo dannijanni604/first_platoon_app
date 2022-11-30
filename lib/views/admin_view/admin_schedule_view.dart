@@ -7,6 +7,7 @@ import 'package:first_platoon/views/auth_views/auth_options_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../controllers/admin_controller.dart';
@@ -78,6 +79,7 @@ class AdminScheduleView extends StatelessWidget {
       body: StreamBuilder(
         stream: DB.schedules
             .where('doc_id', isEqualTo: adminCtrl.admin.groupId)
+            .orderBy('date', descending: true)
             .snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
@@ -104,14 +106,21 @@ class AdminScheduleView extends StatelessWidget {
                                   snapshot.data!.docs[index].data()['schdule'],
                                   style: Const.labelText()),
                             ),
-                            Text("$initialDate"),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              child: Text(" - To - ",
-                                  style: Theme.of(context).textTheme.button),
+                            Text(
+                              dateString(
+                                snapshot.data!.docs[index]
+                                    .data()['date']
+                                    .toString(),
+                              ),
                             ),
-                            Text("$endDate"),
+                            // Text("$initialDate"),
+                            // Padding(
+                            //   padding:
+                            //       const EdgeInsets.symmetric(horizontal: 5),
+                            //   child: Text(" - To - ",
+                            //       style: Theme.of(context).textTheme.button),
+                            // ),
+                            // Text("$endDate"),
                             GestureDetector(
                               onTap: () {
                                 showDialog(
@@ -172,6 +181,15 @@ class AdminScheduleView extends StatelessWidget {
         }),
       ),
     );
+  }
+
+  String dateString(String date) {
+    DateTime st = DateTime.parse(date.substring(0, 10));
+    DateTime en = DateTime.parse(date.substring(26, 36));
+    if (st.month == en.month) {
+      return "${DateFormat('MMM d').format(st)}-${DateFormat('d').format(en)}";
+    }
+    return "${DateFormat('MMM d').format(st)}-${DateFormat('MMM d').format(en)}";
   }
 }
 
