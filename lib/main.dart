@@ -6,6 +6,11 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
 
+/**
+ * uplaodkey alias upload
+ * password abc@12345#
+ */
+
 void main() async {
   await GetStorage.init();
   FlutterFileView.init();
