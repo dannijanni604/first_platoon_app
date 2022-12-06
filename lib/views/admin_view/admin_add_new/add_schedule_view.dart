@@ -101,7 +101,7 @@ class AddScheduleView extends StatelessWidget {
                 },
               ),
               Container(
-                height: 200,
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 child: ctrl.obx(
                   (state) {
                     if (ctrl.members.isNotEmpty) {
@@ -136,39 +136,43 @@ class AddScheduleView extends StatelessWidget {
                   onLoading: const Center(child: CircularProgressIndicator()),
                 ),
               ),
-              Obx(() {
-                return Center(
-                  child: ctrl.indicator.value
-                      ? const CircularProgressIndicator()
-                      : Column(
-                          children: [
-                            kAppButton(
-                              onPressed: () {
-                                if (_key.currentState!.validate()) {
-                                  if (ctrl.scheduleMembers.isNotEmpty) {
-                                    ctrl.addSchedule();
-                                  } else {
-                                    kerrorSnackbar(message: "Add Members List");
+              Obx(
+                () {
+                  return Center(
+                    child: ctrl.indicator.value
+                        ? const CircularProgressIndicator()
+                        : Column(
+                            children: [
+                              kAppButton(
+                                onPressed: () {
+                                  if (_key.currentState!.validate()) {
+                                    if (ctrl.scheduleMembers.isNotEmpty) {
+                                      ctrl.addSchedule();
+                                    } else {
+                                      kerrorSnackbar(
+                                          message: "Add Members List");
+                                    }
                                   }
-                                }
-                              },
-                              label: "Generate Schedule",
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.04,
-                            ),
-                            IconButton(
+                                },
+                                label: "Generate Schedule",
+                                padding: EdgeInsets.symmetric(vertical: 15),
+                              ),
+                              SizedBox(
+                                height: size.height * 0.04,
+                              ),
+                              IconButton(
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
                                 icon: const Icon(
                                   Icons.cancel,
-                                ))
-                          ],
-                        ),
-                );
-              }),
+                                ),
+                              )
+                            ],
+                          ),
+                  );
+                },
+              ),
             ],
           ),
         ),

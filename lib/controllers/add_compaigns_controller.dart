@@ -11,7 +11,7 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
   @override
   void onInit() {
     change(null, status: RxStatus.success());
-    searchMember("");
+    searchMember("", true);
     super.onInit();
   }
 
@@ -139,7 +139,7 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
           );
           memberNameController.clear();
           genetrateCodeController.clear();
-          searchMember("text");
+          searchMember("", true);
           ksucessSnackbar(message: "Code Generated Successfuly");
         }
       } on Exception catch (e) {
@@ -152,34 +152,39 @@ class AddCompaignsConteroller extends GetxController with StateMixin {
   }
 
   Timer? timeHandle;
-  Future searchMember(String text) async {
+  Future searchMember(String text, [bool loaddAll = false]) async {
     try {
-      // if (text.isEmpty) {
-      //   change(members, status: RxStatus.empty());
-      //   return;
-      // }
-      // if (timeHandle != null) {
-      //   timeHandle?.cancel();
-      // }
-      // timeHandle = Timer(const Duration(milliseconds: 700), () async {
-      members.clear();
-      change(members, status: RxStatus.loading());
-      QuerySnapshot<Map<String, dynamic>> doc = await DB.members
-          .where('auth_id', isEqualTo: AdminController.to.admin.groupId)
-          // .where('name_search_terms', arrayContains: text)
-          .get();
-      if (doc.docs.isNotEmpty) {
-        for (var element in doc.docs) {
-          members.add({
-            'name': element.data()['name'],
-            'id': element.id,
-          });
+      if (loaddAll == false) {
+        if (timeHandle != null) {
+          timeHandle?.cancel();
         }
       }
-      final set = <String>{};
-      members.retainWhere((e) => set.add(e['id']));
-      change(members, status: RxStatus.success());
-      // });
+      timeHandle = Timer(const Duration(milliseconds: 700), () async {
+        members.clear();
+        change(members, status: RxStatus.loading());
+        late QuerySnapshot<Map<String, dynamic>> doc;
+        if (loaddAll || text.isEmpty) {
+          doc = await DB.members
+              .where('auth_id', isEqualTo: AdminController.to.admin.groupId)
+              .get();
+        } else {
+          doc = await DB.members
+              .where('auth_id', isEqualTo: AdminController.to.admin.groupId)
+              .where('name_search_terms', arrayContains: text)
+              .get();
+        }
+        if (doc.docs.isNotEmpty) {
+          for (var element in doc.docs) {
+            members.add({
+              'name': element.data()['name'],
+              'id': element.id,
+            });
+          }
+        }
+        final set = <String>{};
+        members.retainWhere((e) => set.add(e['id']));
+        change(members, status: RxStatus.success());
+      });
     } catch (e) {
       change(members, status: RxStatus.error(e.toString()));
     }
